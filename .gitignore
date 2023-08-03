@@ -5,6 +5,7 @@
 /public/storage
 /storage/*.key
 /storage/pars_data
+/storage
 /vendor
 .env
 .env.backup
