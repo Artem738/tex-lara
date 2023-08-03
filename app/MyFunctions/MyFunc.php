@@ -5,7 +5,7 @@ namespace App\MyFunctions;
 class MyFunc
 {
 
-    public static function parseCont(string $r, string $leftString, string $rightString, bool $noString = false): array
+    public static function parseCont(string $r, string $leftString, string $rightString): array
     {
         $results = [];
         $r2 = explode($leftString, $r);
