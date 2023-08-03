@@ -21,6 +21,7 @@ class ParsAllProdUrls extends Command
     private string $directoryPath = 'pars_data/shop';
     private string $productPagesPath = 'pars_data/pages/'; // with /
     private string $allUrlsFilePath = 'pars_data/all_urls.txt';
+    private int $sleepTime = 6;
 
     private function parsShop(): void
     {
@@ -94,11 +95,14 @@ class ParsAllProdUrls extends Command
         if (Storage::exists($this->allUrlsFilePath)) {
             $urls = explode(PHP_EOL, Storage::get($this->allUrlsFilePath));
 
+            $this->output->progressStart(sizeof($urls));
+
             foreach ($urls as $url) {
                 $filename = MyFunc::urlToFileName($url);
 
                 if (Storage::exists($this->productPagesPath . $filename)) {
                     //$this->info("Exist");
+                    $this->output->progressAdvance();
                 } else {
                     $response = Http::get($url);
                     if (strlen($response) < 150000) {
@@ -106,10 +110,13 @@ class ParsAllProdUrls extends Command
                         die();
                     }
                     Storage::put($this->productPagesPath . $filename, $response);
-                    $this->line("Page - " . $url . " saved. Content size - " . strlen($response));
-                    sleep(10);
+                    $this->line(" Page - " . $url . " saved. Content size - " . strlen($response) . ". Sleeping " . $this->sleepTime . " sec...");
+                    $this->output->progressAdvance();
+                    sleep($this->sleepTime);
                 }
             }
+
+            $this->output->progressFinish();
         } else {
             $this->error($this->allUrlsFilePath . " does not exist") . PHP_EOL;
         }
