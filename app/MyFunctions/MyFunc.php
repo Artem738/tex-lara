@@ -26,4 +26,18 @@ class MyFunc
         }
     }
 
+    public static function urlToFileName(string $url): string
+    {
+        $urlWithoutProtocol = str_replace(env('PARS_TARGET_URL'), '', $url);
+        $fileName = str_replace('/', '_', $urlWithoutProtocol);
+        return $fileName.'.txt';
+    }
+
+    public static function fileNameToUrl(string $fileName): string
+    {
+        $urlWithoutProtocol = str_replace('_', '/', $fileName);
+        $url = env('PARS_TARGET_URL') . $urlWithoutProtocol;
+        return str_replace('.txt', '', $url) ;
+    }
+
 }
