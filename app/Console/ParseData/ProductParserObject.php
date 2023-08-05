@@ -2,6 +2,8 @@
 
 namespace App\Console\ParseData;
 
+use App\MyFunctions\MyFunc;
+
 class ProductParserObject
 {
     public ?string $r;
@@ -32,8 +34,39 @@ class ProductParserObject
     public ?string $rollDiscount;
     public ?string $prodStatus;
 
+    //todo: <button class="button-for-search" onclick="location.href='/?s=10029 + 10028 + 10027 + 10021&search_id=1&post_type=product';">Смотреть доступные цвета		</div>
+
 
     /**   checkData     checkData    checkData   */
+//    public function checkData()
+//    {
+//        $allowedNullableProperties = [
+//            'optDiscount',
+//            'saleDiscount',
+//            'cutDiscount',
+//            'rollDiscount',
+//        ];
+//
+//        $allDataPresent = true;
+//        $missingProperties = [];
+//
+//        $properties = get_object_vars($this);
+//
+//        foreach ($properties as $propertyName => $propertyValue) {
+//            if ($propertyValue === null && !in_array($propertyName, $allowedNullableProperties, true)) {
+//                $allDataPresent = false;
+//                $missingProperties[] = $propertyName;
+//            }
+//        }
+//
+//        if ($allDataPresent) {
+//            return true;
+//        } else {
+//
+//            return false;
+//        }
+//    }
+
     public function checkData()
     {
         $allowedNullableProperties = [
@@ -41,27 +74,25 @@ class ProductParserObject
             'saleDiscount',
             'cutDiscount',
             'rollDiscount',
+            // Добавьте сюда другие переменные, которым разрешено быть null
         ];
-
-        $allDataPresent = true;
-        $missingProperties = [];
 
         $properties = get_object_vars($this);
 
         foreach ($properties as $propertyName => $propertyValue) {
             if ($propertyValue === null && !in_array($propertyName, $allowedNullableProperties, true)) {
-                $allDataPresent = false;
                 $missingProperties[] = $propertyName;
+                echo "Missing properties: " . implode(", ", $missingProperties) . PHP_EOL;
+                die();
+                return false;
+
             }
         }
 
-        if ($allDataPresent) {
-            return true;
-        } else {
-            echo "Missing properties: " . implode(", ", $missingProperties) . PHP_EOL;
-            return false;
-        }
+        return true;
     }
+
+
 
     public function __construct(string $r, string $url)
     {
@@ -96,7 +127,7 @@ class ProductParserObject
 
     private function gettingData()
     {
-        $this->parseProductPage($lang = 'ru');
+        $this->parseProductPage();
     }
 
 
@@ -182,7 +213,7 @@ class ProductParserObject
         $this->imgUrl = $firstImgUrl;
         $this->allImgUrl = $all_img_url;
 
-        $description = $this->parseCont($this->r, '<div class="description">', '</p>');
+        $description = MyFunc::parseCont($this->r, '<div class="description">', '<div class="product-reviews">');
         $this->description = $this->megaTrim($description[0]);
 
         if(strpos($this->r,'<p class="stock out-of-stock">')){
@@ -245,7 +276,6 @@ class ProductParserObject
         $returnString = "";
 
         if (is_array($taggedData)) {
-            $returnString = "";
             for ($i = 0; $i < sizeof($taggedData); $i++) {
                 $taggedData[$i] = trim($taggedData[$i]);
                 if (strlen($taggedData[$i]) > 2) {

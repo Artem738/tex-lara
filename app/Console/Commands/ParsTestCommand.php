@@ -23,16 +23,18 @@ class ParsTestCommand extends Command
     public function handle()
     {
         $allUrls = explode("\n", Storage::get($this->allUrlsFilePath));
-        foreach ($allUrls as $url) {
-            $file = Storage::get($this->productPagesPath . MyFunc::urlToFileName($url));
-            $prod = new ProductParserObject($file, $url);
 
-            if ($prod->checkData() === false) {
-                echo($prod); // __
+        for ($i = 0; $i < $allUrls; $i++) {  //463
+
+            $file = Storage::get($this->productPagesPath . MyFunc::urlToFileName($allUrls[$i]));
+            $prod = new ProductParserObject($file, $allUrls[$i]);
+
+            if (!$prod->checkData()) {
+                echo($prod); // __toString
                 die();
             }
-
-
+            $this->info($i." - good - ".$allUrls[$i]. " - good").PHP_EOL;
+            echo($prod).PHP_EOL;
         }
 
 
