@@ -13,31 +13,33 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('r')->nullable();
-            $table->string('sku')->nullable();
-            $table->string('title')->nullable();
-            $table->string('goodUrl')->nullable();
+            $table->string('sku');
+            $table->string('title');
+            $table->string('good_url');
             $table->text('description')->nullable();
-            $table->string('categoryAll')->nullable();
+            $table->string('category_all')->nullable();
             $table->string('purpose')->nullable();
-            $table->string('rollWidth')->nullable();
+            $table->string('roll_width')->nullable();
             $table->string('density')->nullable();
-            $table->string('madeIn')->nullable();
-            $table->string('fabricTone')->nullable();
-            $table->string('patternType')->nullable();
-            $table->string('fabricStructure')->nullable();
+            //$table->string('madeIn')->nullable();
+            $table->unsignedBigInteger('country_id')->nullable();
+            $table->string('fabric_tone')->nullable();
+            $table->string('pattern_type')->nullable();
+            $table->string('fabric_structure')->nullable();
             $table->float('price')->nullable();
-            $table->float('regularPrice')->nullable();
-            $table->float('salePrice')->nullable();
-            $table->string('imgUrl')->nullable();
-            $table->string('allImgUrl')->nullable();
-            $table->string('optDiscount')->nullable();
-            $table->string('saleDiscount')->nullable();
-            $table->string('cutDiscount')->nullable();
-            $table->string('rollDiscount')->nullable();
-            $table->string('prodStatus')->nullable();
+            $table->float('regular_price')->nullable();
+            $table->float('sale_price')->nullable();
+            $table->string('img_url')->nullable();
+            $table->string('allImg_url')->nullable();
+            $table->string('opt_discount')->nullable();
+            $table->string('sale_discount')->nullable();
+            $table->string('cut_discount')->nullable();
+            $table->string('roll_discount')->nullable();
+            $table->string('prod_status')->nullable();
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('country_id')->references('id')->on('countries')->onDelete('set null');
         });
     }
 

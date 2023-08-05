@@ -39,4 +39,9 @@ class Product extends Model
         'prodStatus'
     ];
 
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id', 'id');
+    }
+
 }
