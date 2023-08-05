@@ -27,7 +27,7 @@ class ProductParserObject
     public ?string $imgUrl;
     public ?string $allImgUrl;
     //public ?string $width; ??
-   // public ?string $length;
+    // public ?string $length;
     public ?string $optDiscount;
     public ?string $saleDiscount;
     public ?string $cutDiscount;
@@ -91,7 +91,6 @@ class ProductParserObject
 
         return true;
     }
-
 
 
     public function __construct(string $r, string $url)
@@ -214,9 +213,11 @@ class ProductParserObject
         $this->allImgUrl = $all_img_url;
 
         $description = MyFunc::parseCont($this->r, '<div class="description">', '<div class="product-reviews">');
+       // echo (gettype($description) . " " . $this->goodUrl) . PHP_EOL;
+       // die();
         $this->description = $this->megaTrim($description[0]);
 
-        if(strpos($this->r,'<p class="stock out-of-stock">')){
+        if (strpos($this->r, '<p class="stock out-of-stock">')) {
             $this->prodStatus = 'not exist';
         } else {
             $this->prodStatus = 'exist';
@@ -382,9 +383,6 @@ class ProductParserObject
         $csvdata = str_replace("|", "-", $csvdata);
         return $csvdata;
     }
-
-
-
 
 
     public function __toString()

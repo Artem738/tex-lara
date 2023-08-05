@@ -24,20 +24,25 @@ class ParsTestCommand extends Command
     {
         $allUrls = explode("\n", Storage::get($this->allUrlsFilePath));
 
-        for ($i = 0; $i < $allUrls; $i++) {  //463
+        //$this->output->progressStart(sizeof($allUrls));
+        for ($i = 462; $i < $allUrls; $i++) {  //463
 
-            $file = Storage::get($this->productPagesPath . MyFunc::urlToFileName($allUrls[$i]));
-            $prod = new ProductParserObject($file, $allUrls[$i]);
+            echo ($allUrls[$i] . " parsing start - " . $i) . PHP_EOL;
+            $fileHtmlString = Storage::get($this->productPagesPath . MyFunc::urlToFileName($allUrls[$i]));
+            $prod = new ProductParserObject($fileHtmlString, $allUrls[$i]);
 
             if (!$prod->checkData()) {
                 echo($prod); // __toString
                 die();
             }
-            $this->info($i." - good - ".$allUrls[$i]. " - good").PHP_EOL;
-            echo($prod).PHP_EOL;
+            //echo($prod).PHP_EOL;
+            $this->info($i . " - good - " . $allUrls[$i] . " - good");
+            echo($prod);
+            // $this->output->progressAdvance();
+
         }
 
-
+        //$this->output->progressFinish();
     }
 
 
