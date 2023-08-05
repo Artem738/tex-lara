@@ -40,4 +40,33 @@ class MyFunc
         return str_replace('.txt', '', $url) ;
     }
 
+    public static function parseContMulti($r, $leftString, $rightString)
+    {
+        $urls = [];
+        $r2 = explode($leftString, $r);
+        for ($i = 1; $i < sizeof($r2); $i++) {
+            //$r2[$i] = $leftString.$r2[$i]; // хз
+            $strpos = strpos($r2[$i], $rightString);
+            $result = substr($r2[$i], 0, $strpos);
+            if ($result) {
+                $urls[] = $result;
+            }
+        }
+        if (!$urls) {
+            return false;
+        } else {
+            if (!$urls) {
+                return false;
+            } else {
+                if (sizeof($urls) > 1) {
+                    return $urls;
+                } else {
+                    $urls = $urls[0];
+                    return $urls;
+                }
+            }
+        }
+    }
+
+
 }

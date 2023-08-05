@@ -35,13 +35,46 @@ class ParsTestCommand extends Command
 
             if (!$prod->checkData()) {
                 echo($prod); // __toString
-                die();
+                //die();
             }
             //echo($prod).PHP_EOL;
             $this->info($i . " - good - " . $allUrls[$i] . " - good");
             //echo($prod);
             $allMadeIns[] = $prod->madeIn;
-            // $this->output->progressAdvance();
+
+
+            /// CHEKING NON NULL DATA
+            if ($prod->sku == null) {
+                $this->error($prod->goodUrl." -  sku");
+                die();
+            }
+            if ($prod->title == null) {
+                $this->error($prod->goodUrl." -  title");
+                die();
+            }
+            if ($prod->categoryAll == null) {
+                $this->error($prod->goodUrl." -  categoryAll");
+                die();
+            }
+
+
+            if ($prod->rollWidth == null) {
+                $this->alert($prod->goodUrl." -  rollWidth");
+                //die();
+            }
+
+            if ($prod->fabricTone == null) {
+                $this->alert(" -  fabricTone  - ". $prod->goodUrl);
+                die();
+
+            }
+            if ($prod->description == null) {
+                echo ($prod->goodUrl) . PHP_EOL;
+                echo ("description") . PHP_EOL;
+                die();
+            }
+
+
 
         }
 
@@ -55,8 +88,8 @@ class ParsTestCommand extends Command
             }
         }
 
-        print_r($allMadeIns);
-        print_r($statMadeIn);
+//        print_r($allMadeIns);
+//        print_r($statMadeIn);
 
         //$this->output->progressFinish();
     }

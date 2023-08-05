@@ -3,6 +3,7 @@
 namespace App\Console\ParseData;
 
 use App\MyFunctions\MyFunc;
+use App\MyFunctions\ParsFunc;
 
 class ProductParserObject
 {
@@ -19,6 +20,7 @@ class ProductParserObject
     public ?string $categoryAll;
     public ?string $purpose;
     public ?string $rollWidth;
+    public ?string $rollWidthCategory;
     public ?string $density;
     public ?string $madeIn;
     public ?string $fabricTone;
@@ -37,36 +39,6 @@ class ProductParserObject
 
     //todo: <button class="button-for-search" onclick="location.href='/?s=10029 + 10028 + 10027 + 10021&search_id=1&post_type=product';">Смотреть доступные цвета		</div>
 
-
-    /**   checkData     checkData    checkData   */
-//    public function checkData()
-//    {
-//        $allowedNullableProperties = [
-//            'optDiscount',
-//            'saleDiscount',
-//            'cutDiscount',
-//            'rollDiscount',
-//        ];
-//
-//        $allDataPresent = true;
-//        $missingProperties = [];
-//
-//        $properties = get_object_vars($this);
-//
-//        foreach ($properties as $propertyName => $propertyValue) {
-//            if ($propertyValue === null && !in_array($propertyName, $allowedNullableProperties, true)) {
-//                $allDataPresent = false;
-//                $missingProperties[] = $propertyName;
-//            }
-//        }
-//
-//        if ($allDataPresent) {
-//            return true;
-//        } else {
-//
-//            return false;
-//        }
-//    }
 
     public function checkData()
     {
@@ -104,6 +76,7 @@ class ProductParserObject
         $this->categoryAll = null;
         $this->purpose = null;
         $this->rollWidth = null;
+        $this->rollWidthCategory = null;
         $this->density = null;
         $this->madeIn = null;
         $this->fabricTone = null;
@@ -146,41 +119,48 @@ class ProductParserObject
         $dataArray = array();
 
 
-        $this->title = $this->parseCont($this->r, 'post-product current-item">', '<');
+        $this->title = MyFunc::parseContMulti($this->r, 'post-product current-item">', '<');
         $this->title = $this->megaTrim($this->title);
 
-        $this->sku = $this->parseCont($this->r, '<span class="sku">', '</span>');
+        $this->sku = MyFunc::parseContMulti($this->r, '<span class="sku">', '</span>');
         $this->sku = trim($this->sku);
 
-        $this->categoryAll = $this->parseCont($this->r, '<span class="posted_in">', '</span>');
-        $this->categoryAll = $this->parseTaggedString($this->categoryAll);
+        $this->categoryAll = MyFunc::parseContMulti($this->r, '<span class="posted_in">', '</span>');
+        $this->categoryAll = ParsFunc::parseTaggedString($this->categoryAll);
 
-        $this->purpose = $this->parseCont($this->r, '<span>' . $naznach_lang, '</span>');
-        $this->purpose = $this->parseTaggedString($this->purpose);
+        $this->purpose = MyFunc::parseContMulti($this->r, '<span>' . $naznach_lang, '</span>');
+        $this->purpose = ParsFunc::parseTaggedString($this->purpose);
 
-        $this->rollWidth = $this->parseCont($this->r, '<span>' . $shir_lang, '</span>');
-        $this->rollWidth = $this->parseTaggedString($this->rollWidth);
+        $this->rollWidth = MyFunc::parseContMulti($this->r, '<span>' . $shir_lang, '</span>');
+        $this->rollWidth = ParsFunc::parseTaggedString($this->rollWidth);
+        if($this->rollWidth == null) {
+            $this->rollWidth = MyFunc::parseContMulti($this->r, '<span>' . "Ширина:", '</span>');
+            $this->rollWidth = ParsFunc::parseTaggedString($this->rollWidth);
+        }
 
-
-        $this->density = $this->parseCont($this->r, '<span>' . $plotn_lang, '</span>');
-        $this->density = $this->parseTaggedString($this->density);
-
-        $this->madeIn = $this->parseCont($this->r, '<span>' . $strproizvod_lang, '</span>');
-        $this->madeIn = $this->parseTaggedString($this->madeIn);
-
-        $this->fabricTone = $this->parseCont($this->r, '<span>' . $ottenok_lang, '</span>');
-        $this->fabricTone = $this->parseTaggedString($this->fabricTone);
-
-        $this->patternType = $this->parseCont($this->r, 'class="tagged_as">', '</span>');
-        $this->patternType = $this->parseTaggedString($this->patternType);
-
-        $this->fabricStructure = $this->parseCont($this->r, '<div class="product-fabric">', '</div>');
-        $this->fabricStructure = $this->parseCont($this->fabricStructure, $sostav . '</p><p>', '</p>');
-        $this->fabricStructure = $this->fabricStructureCorrector($this->fabricStructure);
+        $this->rollWidthCategory = MyFunc::parseContMulti($this->r, '<span>' . 'Категория ширины рулона', '</span>');
+        $this->rollWidthCategory = ParsFunc::parseTaggedString($this->rollWidthCategory);
 
 
-        $price = $this->parseCont($this->r, '<p class="price">', '</p>');
-        $price = $this->parseCont($price, '<bdi>', '&nbsp;');
+        $this->density = MyFunc::parseContMulti($this->r, '<span>' . $plotn_lang, '</span>');
+        $this->density = ParsFunc::parseTaggedString($this->density);
+
+        $this->madeIn = MyFunc::parseContMulti($this->r, '<span>' . $strproizvod_lang, '</span>');
+        $this->madeIn = ParsFunc::parseTaggedString($this->madeIn);
+
+        $this->fabricTone = MyFunc::parseContMulti($this->r, '<span>' . $ottenok_lang, '</span>');
+        $this->fabricTone = ParsFunc::parseTaggedString($this->fabricTone);
+
+        $this->patternType = MyFunc::parseContMulti($this->r, 'class="tagged_as">', '</span>');
+        $this->patternType = ParsFunc::parseTaggedString($this->patternType);
+
+        $this->fabricStructure = MyFunc::parseContMulti($this->r, '<div class="product-fabric">', '</div>');
+        $this->fabricStructure = MyFunc::parseContMulti($this->fabricStructure, $sostav . '</p><p>', '</p>');
+        $this->fabricStructure =  ParsFunc::fabricStructureCorrector($this->fabricStructure);
+
+
+        $price = MyFunc::parseContMulti($this->r, '<p class="price">', '</p>');
+        $price = MyFunc::parseContMulti($price, '<bdi>', '&nbsp;');
         $price = str_replace(",", "", $price);
         if (is_array($price)) {
             $this->price = floatval($price[1]);
@@ -193,8 +173,8 @@ class ProductParserObject
         }
 
         // images
-        $imgs = $this->parseCont($this->r, '<div class="gallery-cno">', '</div></div>');
-        $imgs = $this->parseCont($imgs, '<img src="', '"');
+        $imgs = MyFunc::parseContMulti($this->r, '<div class="gallery-cno">', '</div></div>');
+        $imgs = MyFunc::parseContMulti($imgs, '<img src="', '"');
         $firstImgUrl = "";
         if (is_array($imgs)) {
             $firstImgUrl = $imgs[0];
@@ -232,66 +212,9 @@ class ProductParserObject
 
 ##############  F U N C T I O N S #######################
 
-    function fabricStructureCorrector($retStr)
-    {
 
 
-        // Work fine :)  but looks strange ))
-        $retStr = mb_strtoupper($retStr);
-        $retStr = str_replace("( ", "(", $retStr);
-        $retStr = str_replace(" )", ")", $retStr);
-        $retStr = str_replace("(ХЛОПОК)", "", $retStr);
-        $retStr = str_replace("ОРГАНИКА", "", $retStr);
-        $retStr = str_replace("КОТОН", "ХЛОПОК", $retStr);
-        $retStr = str_replace("КОТТОН", "ХЛОПОК", $retStr);
-        $retStr = str_replace("ПОЛИЄСТЕР", "ПОЛИЭФИР", $retStr);
-        $retStr = str_replace("ПОЛИЭСТЕР", "ПОЛИЭФИР", $retStr);
-        $retStr = str_replace("ПОЛИЕСТЕР", "ПОЛИЭФИР", $retStr);
-        $retStr = str_replace("ПОЛИУРEТАН", "ПОЛИУРЕТАН", $retStr);
-        $retStr = str_replace("ЭЛАСТАН", "СПАНДЕКС", $retStr);
-        $retStr = str_replace("ЭЛАСТАН", "СПАНДЕКС", $retStr);
-        $retStr = str_replace("ЕЛАСТАН", "СПАНДЕКС", $retStr);
-        $retStr = str_replace(";", "", $retStr);
-        $retStr = str_replace(". ", "", $retStr);
-        $retStr = str_replace("% ,", "%", $retStr);
-        $retStr = str_replace("%,", "%", $retStr);
-        $retStr = str_replace("%", "%,", $retStr);
-        $retStr = str_replace(",", ";", $retStr);
-        $retStr = preg_replace('/[\s]+/mu', ' ', $retStr);
 
-        $retStr = rtrim($retStr, ";");
-
-        //print($retStr. '<br>');
-        return $retStr;
-    }
-
-    function parseTaggedString($taggedData)
-    {
-
-        $taggedData = str_replace('&nbsp;', ' ', $taggedData);
-        $taggedData = str_replace('&#x433;', '', $taggedData);
-        $taggedData = str_replace('&#x440;', '', $taggedData);
-        $taggedData = str_replace('&#x43D;', '', $taggedData);
-
-        $taggedData = $this->parseCont($taggedData, '>', '<');
-        $returnString = "";
-
-        if (is_array($taggedData)) {
-            for ($i = 0; $i < sizeof($taggedData); $i++) {
-                $taggedData[$i] = trim($taggedData[$i]);
-                if (strlen($taggedData[$i]) > 2) {
-                    $returnString = $returnString . $taggedData[$i];
-                    if ($i != sizeof($taggedData) - 1) {
-                        $returnString = $returnString . ";";
-                    }
-                }
-            }
-        } else {
-            $returnString = trim($taggedData);
-        }
-
-        return $returnString;
-    }
 
 
     /* PARSE PAGE FUNCTION */
@@ -320,33 +243,7 @@ class ProductParserObject
     }
 
 
-    private function parseCont($r, $leftString, $rightString)
-    {
-        $urls = [];
-        $r2 = explode($leftString, $r);
-        for ($i = 1; $i < sizeof($r2); $i++) {
-            //$r2[$i] = $leftString.$r2[$i]; // хз
-            $strpos = strpos($r2[$i], $rightString);
-            $result = substr($r2[$i], 0, $strpos);
-            if ($result) {
-                $urls[] = $result;
-            }
-        }
-        if (!$urls) {
-            return false;
-        } else {
-            if (!$urls) {
-                return false;
-            } else {
-                if (sizeof($urls) > 1) {
-                    return $urls;
-                } else {
-                    $urls = $urls[0];
-                    return $urls;
-                }
-            }
-        }
-    }
+
 
     function getAndDeleteFirstLineFromFile($filePath)
     {
@@ -400,6 +297,7 @@ class ProductParserObject
             $this->getColorString($this->categoryAll, "Category All") .
             $this->getColorString($this->purpose, "Purpose") .
             $this->getColorString($this->rollWidth, "Roll Width") .
+            $this->getColorString($this->rollWidthCategory, "Roll Width Category") .
             $this->getColorString($this->density, "Density") .
             $this->getColorString($this->madeIn, "Made In") .
             $this->getColorString($this->fabricTone, "Fabric Tone") .
