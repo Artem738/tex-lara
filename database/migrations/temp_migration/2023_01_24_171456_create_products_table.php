@@ -29,8 +29,6 @@ return new class extends Migration
             $table->string('good_url');
             $table->text('description')->nullable();
             $table->text('category_all')->nullable();
-            //$table->unsignedBigInteger('category_id')->default('0');; //category id
-
             $table->text('purpose')->nullable();
             $table->string('roll_width')->nullable();
             $table->string('density')->nullable();

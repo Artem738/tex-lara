@@ -6,7 +6,10 @@ use App\MyFunctions\MyFunc;
 
 class ProductParserObject
 {
+    /// UTIL
     public ?string $r;
+
+    /// DATA
 
     public ?string $sku;
 
@@ -26,8 +29,6 @@ class ProductParserObject
     public ?float $salePrice;
     public ?string $imgUrl;
     public ?string $allImgUrl;
-    //public ?string $width; ??
-    // public ?string $length;
     public ?string $optDiscount;
     public ?string $saleDiscount;
     public ?string $cutDiscount;
@@ -83,7 +84,6 @@ class ProductParserObject
             if ($propertyValue === null && !in_array($propertyName, $allowedNullableProperties, true)) {
                 $missingProperties[] = $propertyName;
                 echo "Missing properties: " . implode(", ", $missingProperties) . PHP_EOL;
-                die();
                 return false;
 
             }
