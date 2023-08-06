@@ -69,4 +69,18 @@ class MyFunc
     }
 
 
+    public static function writeMapToFileTsv($dataMap, $resultDataTsvFilePath)
+    {
+
+        $lineString = "";
+
+        foreach ($dataMap as $key => $value) {
+            $value = str_replace("\t", " ", $value);
+            $lineString = $lineString . $value . "\t";
+        }
+        //print($lineString); exit;
+        file_put_contents($resultDataTsvFilePath, $lineString . PHP_EOL, FILE_APPEND | LOCK_EX);
+        //print_r($dataMap);
+    }
+
 }

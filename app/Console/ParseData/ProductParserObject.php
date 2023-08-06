@@ -8,14 +8,14 @@ use App\MyFunctions\ParsFunc;
 class ProductParserObject
 {
     /// UTIL
-    public ?string $r;
+    public string $r;
 
     /// DATA
 
     public ?string $sku;
 
     public ?string $title;
-    public ?string $goodUrl;
+    public string $goodUrl;
     public ?string $description;
     public ?string $categoryAll;
     public ?string $purpose;
@@ -26,6 +26,7 @@ class ProductParserObject
     public ?string $fabricTone;
     public ?string $patternType;
     public ?string $fabricStructure;
+
     public ?float $price;
     public ?float $regularPrice;
     public ?float $salePrice;
@@ -36,11 +37,13 @@ class ProductParserObject
     public ?string $cutDiscount;
     public ?string $rollDiscount;
     public ?string $prodStatus;
+    public ?string $similarProducts;
+
 
     //todo: <button class="button-for-search" onclick="location.href='/?s=10029 + 10028 + 10027 + 10021&search_id=1&post_type=product';">Смотреть доступные цвета		</div>
 
 
-    public function checkData()
+    public function checkData(): bool
     {
         $allowedNullableProperties = [
             'optDiscount',
@@ -69,6 +72,8 @@ class ProductParserObject
     {
 
         $this->r = $r;
+
+        ///
         $this->sku = null;
         $this->title = null;
         $this->goodUrl = $url;
@@ -92,35 +97,32 @@ class ProductParserObject
         $this->cutDiscount = null;
         $this->rollDiscount = null;
         $this->prodStatus = null;
+        $this->similarProducts = null;
 
-        $this->gettingData();
-
-    }
-
-    private function gettingData()
-    {
         $this->parseProductPage();
+
     }
+
+//    private function gettingData(): void
+//    {
+//        $this->parseProductPage();
+//    }
 
 
 ##############  F U N C T I O N S #######################
-    public function parseProductPage($lang = 'ru'): void
+    public function parseProductPage(): void
     {
-        if ($lang == 'ru') {
-            $naznach_lang = 'назначение:';
-            $shir_lang = 'ширина рулона СМ.:';
-            $plotn_lang = 'ПЛОТНОСТЬ Г/М:';
-            $strproizvod_lang = 'страна производитель:';
-            $ottenok_lang = 'Оттенок:';
-            $sostav = "состав:";
-        }
-
-
-        $dataArray = array();
+        // if ($lang == 'ru') { $lang = 'ru'
+        $naznach_lang = 'назначение:';
+        $shir_lang = 'ширина рулона СМ.:';
+        $plotn_lang = 'ПЛОТНОСТЬ Г/М:';
+        $strproizvod_lang = 'страна производитель:';
+        $ottenok_lang = 'Оттенок:';
+        $sostav = "состав:";
 
 
         $this->title = MyFunc::parseContMulti($this->r, 'post-product current-item">', '<');
-        $this->title = $this->megaTrim($this->title);
+        $this->title = ParsFunc::megaTrim($this->title);
 
         $this->sku = MyFunc::parseContMulti($this->r, '<span class="sku">', '</span>');
         $this->sku = trim($this->sku);
@@ -133,7 +135,7 @@ class ProductParserObject
 
         $this->rollWidth = MyFunc::parseContMulti($this->r, '<span>' . $shir_lang, '</span>');
         $this->rollWidth = ParsFunc::parseTaggedString($this->rollWidth);
-        if($this->rollWidth == null) {
+        if ($this->rollWidth == null) {
             $this->rollWidth = MyFunc::parseContMulti($this->r, '<span>' . "Ширина:", '</span>');
             $this->rollWidth = ParsFunc::parseTaggedString($this->rollWidth);
         }
@@ -156,26 +158,32 @@ class ProductParserObject
 
         $this->fabricStructure = MyFunc::parseContMulti($this->r, '<div class="product-fabric">', '</div>');
         $this->fabricStructure = MyFunc::parseContMulti($this->fabricStructure, $sostav . '</p><p>', '</p>');
-        $this->fabricStructure =  ParsFunc::fabricStructureCorrector($this->fabricStructure);
+        $this->fabricStructure = ParsFunc::fabricStructureCorrector($this->fabricStructure);
 
 
-        $price = MyFunc::parseContMulti($this->r, '<p class="price">', '</p>');
-        $price = MyFunc::parseContMulti($price, '<bdi>', '&nbsp;');
-        $price = str_replace(",", "", $price);
+        $price = MyFunc::parseContMulti($this->r, '<meta itemprop="price" content="', '"');
+        $regularPrice = MyFunc::parseContMulti($this->r, '<del><span class="woocommerce-Price-amount amount"><bdi>', '&nbsp');
+        //$price = MyFunc::parseContMulti($price, '<bdi>', '&nbsp;');
+        //$price = str_replace(",", "", $price);
+
+        if (!$regularPrice) {
+            $regularPrice = $price;
+        }
+
         if (is_array($price)) {
             $this->price = floatval($price[1]);
-            $this->regularPrice = floatval($price[1]);
+            $this->regularPrice = floatval($regularPrice[1]);
             $this->salePrice = floatval($price[0]);
         } else {
             $this->price = floatval($price);
-            $this->regularPrice = floatval($price);
+            $this->regularPrice = floatval($regularPrice);
             $this->salePrice = floatval($price);
         }
+
 
         // images
         $imgs = MyFunc::parseContMulti($this->r, '<div class="gallery-cno">', '</div></div>');
         $imgs = MyFunc::parseContMulti($imgs, '<img src="', '"');
-        $firstImgUrl = "";
         if (is_array($imgs)) {
             $firstImgUrl = $imgs[0];
             $all_img_url = "";
@@ -193,9 +201,9 @@ class ProductParserObject
         $this->allImgUrl = $all_img_url;
 
         $description = MyFunc::parseCont($this->r, '<div class="description">', '<div class="product-reviews">');
-       // echo (gettype($description) . " " . $this->goodUrl) . PHP_EOL;
-       // die();
-        $this->description = $this->megaTrim($description[0]);
+        // echo (gettype($description) . " " . $this->goodUrl) . PHP_EOL;
+        // die();
+        $this->description = ParsFunc::megaTrim($description[0]);
 
         if (strpos($this->r, '<p class="stock out-of-stock">')) {
             $this->prodStatus = 'not exist';
@@ -203,90 +211,25 @@ class ProductParserObject
             $this->prodStatus = 'exist';
         }
 
+
+
+         $this->similarProducts = MyFunc::parseContMulti($this->r, 'button-for-search" onclick="location.href=', ';">');
+        $this->similarProducts = str_replace("'","", $this->similarProducts);
+        $this->similarProducts = str_replace("/?","", $this->similarProducts);
+
 //        echo($this);
 //        $this->checkData();
 //        die();
-
     }
 
 
 ##############  F U N C T I O N S #######################
 
-
-
-
-
-
-    /* PARSE PAGE FUNCTION */
-
-    function writeMapToFileTsv($dataMap, $resultDataTsvFilePath)
-    {
-
-        $lineString = "";
-
-        foreach ($dataMap as $key => $value) {
-            $value = str_replace("\t", " ", $value);
-            $lineString = $lineString . $value . "\t";
-        }
-        //print($lineString); exit;
-        file_put_contents($resultDataTsvFilePath, $lineString . PHP_EOL, FILE_APPEND | LOCK_EX);
-        //print_r($dataMap);
-    }
-
-    function getFileNameFromUrl($url)
-    {
-        $pageFileName = parse_url($url, PHP_URL_PATH);
-        $pageFileName = trim($pageFileName, '/') . '.txt';
-        $pageFileName = str_replace('/', '_', $pageFileName);
-        $pageFileName = str_replace('product_', '', $pageFileName);
-        return $pageFileName;
-    }
-
-
-
-
-    function getAndDeleteFirstLineFromFile($filePath)
-    {
-        $allData = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        $firstElement = array_shift($allData);
-        file_put_contents($filePath, implode(PHP_EOL, $allData), FILE_APPEND || LOCK_EX);
-        return $firstElement;
-    }
-
-
-    function megaTrim($csvdata)
-    {
-        $csvdata = trim($csvdata);
-        // Спецвимволы типа &nbsp;  убираются, но возможно..., это не всегда надо наверно, возможно нужно только для $name и $description ...
-        $csvdata = htmlspecialchars_decode($csvdata);
-
-        $csvdata = str_replace("\t\t", "\t", $csvdata);
-        $csvdata = str_replace("\t\t", "\t", $csvdata);
-        $csvdata = str_replace("\t\t", "\t", $csvdata);
-        $csvdata = str_replace("\n", " ", $csvdata);
-        $csvdata = str_replace("\r", " ", $csvdata);
-        $csvdata = str_replace("&#13;", " ", $csvdata);
-        $csvdata = str_replace("  ", " ", $csvdata); // уберем двойные пробелы
-        $csvdata = str_replace("  ", " ", $csvdata);
-        $csvdata = str_replace("  ", " ", $csvdata);
-        $csvdata = str_replace("  ", " ", $csvdata);
-        $csvdata = str_replace("  ", " ", $csvdata);
-        $csvdata = str_replace("  ", " ", $csvdata);
-        $csvdata = str_replace("  ", " ", $csvdata);
-        $csvdata = str_replace("  ", " ", $csvdata);
-
-        $csvdata = str_replace("  ", " ", $csvdata);
-        $csvdata = str_replace("	", " ", $csvdata); //уберем табуляторы
-        $csvdata = str_replace("|", "-", $csvdata);
-        return $csvdata;
-    }
-
-
     public function __toString()
     {
         $reset = "\033[0m"; // Сброс стилей
-        $red = "\033[31m"; // Красный
-        $green = "\033[32m"; // Зеленый
+        //  $red = "\033[31m"; // Красный
+        //  $green = "\033[32m"; // Зеленый
 
         return
 
@@ -313,10 +256,11 @@ class ProductParserObject
             $this->getColorString($this->cutDiscount, "Cut Discount") .
             $this->getColorString($this->rollDiscount, "Roll Discount") .
             $this->getColorString($this->prodStatus, "Product Status") .
+            $this->getColorString($this->similarProducts, "Product Status") .
             $reset;
     }
 
-    private function getColorString($value, $label)
+    private function getColorString($value, $label): string
     {
         $reset = "\033[0m"; // Сброс стилей
         $red = "\033[31m"; // Красный

@@ -67,6 +67,34 @@ class ParsFunc
     }
 
 
+    public static function megaTrim($csvdata)
+    {
+        $csvdata = trim($csvdata);
+        // Спецвимволы типа &nbsp;  убираются, но возможно..., это не всегда надо наверно, возможно нужно только для $name и $description ...
+        $csvdata = htmlspecialchars_decode($csvdata);
+
+        $csvdata = str_replace("\t\t", "\t", $csvdata);
+        $csvdata = str_replace("\t\t", "\t", $csvdata);
+        $csvdata = str_replace("\t\t", "\t", $csvdata);
+        $csvdata = str_replace("\n", " ", $csvdata);
+        $csvdata = str_replace("\r", " ", $csvdata);
+        $csvdata = str_replace("&#13;", " ", $csvdata);
+        $csvdata = str_replace("  ", " ", $csvdata); // уберем двойные пробелы
+        $csvdata = str_replace("  ", " ", $csvdata);
+        $csvdata = str_replace("  ", " ", $csvdata);
+        $csvdata = str_replace("  ", " ", $csvdata);
+        $csvdata = str_replace("  ", " ", $csvdata);
+        $csvdata = str_replace("  ", " ", $csvdata);
+        $csvdata = str_replace("  ", " ", $csvdata);
+        $csvdata = str_replace("  ", " ", $csvdata);
+
+        $csvdata = str_replace("  ", " ", $csvdata);
+        $csvdata = str_replace("	", " ", $csvdata); //уберем табуляторы
+        $csvdata = str_replace("|", "-", $csvdata);
+        return $csvdata;
+    }
+
+
 
 
 }

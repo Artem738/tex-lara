@@ -45,35 +45,48 @@ class ParsTestCommand extends Command
 
             /// CHEKING NON NULL DATA
             if ($prod->sku == null) {
-                $this->error($prod->goodUrl." -  sku");
+                $this->error($prod->goodUrl . " -  sku");
                 die();
             }
             if ($prod->title == null) {
-                $this->error($prod->goodUrl." -  title");
+                $this->error($prod->goodUrl . " -  title");
                 die();
             }
             if ($prod->categoryAll == null) {
-                $this->error($prod->goodUrl." -  categoryAll");
+                $this->error($prod->goodUrl . " -  categoryAll");
                 die();
             }
 
-
             if ($prod->rollWidth == null) {
-                $this->alert($prod->goodUrl." -  rollWidth");
+                $this->alert($prod->goodUrl . " -  rollWidth");
                 //die();
             }
 
             if ($prod->fabricTone == null) {
-                $this->alert(" -  fabricTone  - ". $prod->goodUrl);
-                die();
-
+                $this->alert(" -  fabricTone  - " . $prod->goodUrl);
+                //die();
             }
             if ($prod->description == null) {
-                echo ($prod->goodUrl) . PHP_EOL;
-                echo ("description") . PHP_EOL;
+                $this->error(" -  description  - " . $prod->goodUrl);
                 die();
             }
+            if ($prod->price == null) {
+                $this->error(" -  price $$  - " . $prod->goodUrl);
+                //echo($prod);
+                //die();
+            }
+            //echo($prod->price);
 
+            if ($prod->goodUrl == "https://iamtex.com.ua/product/bifleks-zhatka-14/") {
+                // echo($prod);
+                // die();
+            }
+
+            if ($prod->price != $prod->regularPrice) {
+                $this->info($prod->price . ' $prod->price != $prod->regularPrice ' . $prod->regularPrice);
+            }
+
+            $this->info($prod->similarProducts);
 
 
         }
