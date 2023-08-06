@@ -39,7 +39,6 @@ class CountriesSeeder extends Seeder
         ];
 
 
-        $now = now();
 
         foreach ($countriesData as $country) {
 
@@ -53,8 +52,8 @@ class CountriesSeeder extends Seeder
                     [
                         'id' => $country['id'],
                         'name' => $country['name'],
-                        'created_at' => $now,
-                        'updated_at' => $now,
+                        'created_at' => now(),
+                        'updated_at' => now(),
                     ]
                 );
             } catch (Exception $e) {

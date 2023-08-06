@@ -14,14 +14,15 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('sku')->unique();
-            $table->string('title');
+            $table->string('name');
             $table->string('good_url')->unique();
             $table->text('description')->nullable();
-            $table->string('category_all')->nullable();
+            $table->text('category_all')->nullable();
             $table->string('purpose')->nullable();
             $table->string('roll_width')->nullable();
+            $table->string('roll_width_category')->nullable();
             $table->string('density')->nullable();
-             $table->unsignedBigInteger('country_id');
+            $table->unsignedBigInteger('country_id')->nullable();
             $table->string('fabric_tone')->nullable();
             $table->string('pattern_type')->nullable();
             $table->string('fabric_structure')->nullable();
@@ -29,12 +30,13 @@ return new class extends Migration
             $table->float('regular_price')->nullable();
             $table->float('sale_price')->nullable();
             $table->string('img_url')->nullable();
-            $table->string('allImg_url')->nullable();
+            $table->text('all_img_url')->nullable();
             $table->string('opt_discount')->nullable();
             $table->string('sale_discount')->nullable();
             $table->string('cut_discount')->nullable();
             $table->string('roll_discount')->nullable();
             $table->string('prod_status')->nullable();
+            $table->string('similar_products')->nullable();
             $table->softDeletes();
             $table->timestamps();
 
