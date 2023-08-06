@@ -2,7 +2,12 @@
 
 namespace Database\Seeders;
 
-class ProductsSeeder
-{
+use Illuminate\Database\Seeder;
 
+class ProductsSeeder extends Seeder
+{
+    public function run(): void
+    {
+        print("gogo").PHP_EOL;
+    }
 }

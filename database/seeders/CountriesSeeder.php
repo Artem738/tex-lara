@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 
+use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -42,11 +43,12 @@ class CountriesSeeder extends Seeder
 
         foreach ($countriesData as $country) {
 
-            print($country['name']) . PHP_EOL;
-            print($country['id']) . PHP_EOL;
-           // die();
+           // print($country['name']) . PHP_EOL;
+           // print($country['id']) . PHP_EOL;
+            // die();
 
 
+            try {
                 DB::table('countries')->insert(
                     [
                         'id' => $country['id'],
@@ -55,35 +57,11 @@ class CountriesSeeder extends Seeder
                         'updated_at' => $now,
                     ]
                 );
-
-
+            } catch (Exception $e) {
+                continue; // Пропустить текущую итерацию цикла и перейти к следующей
+            }
         }
 
-
-        //  $this->currentId = DB::table('categories')->max('id') + 1;
-
-        //   $faker = Faker::create();
-//        for ($i = 0; $i < $this->categoriesNumberToInsert; $i++) {
-//            $isException = null;
-//            $name = ucfirst($faker->word()) . $faker->randomLetter();
-//            try {
-//                DB::table('categories')->insert(
-//                    [
-//                        'id' => $this->currentId,
-//                        'name' => $name,
-//                        'created_at' => $now,
-//                        'updated_at' => $now,
-//                    ]
-//                );
-//            } catch (QueryException $e) {
-//                $this->duplicatedEntryCount++;
-//                $isException = true;
-//                DatabaseSeeder::handleAllEntryErrors($e);
-//            }
-//            if (!$isException) {
-//                $this->currentId++;
-//            }
-//        }
     }
 
 

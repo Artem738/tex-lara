@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\MyFunctions\MyFunc;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,7 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
+        MyFunc::hello();
         //        $this->call(CategorySeeder::class);
         //        $this->call(BookSeeder::class);
         $this->call(
