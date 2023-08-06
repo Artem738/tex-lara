@@ -22,6 +22,7 @@ class ParsTestCommand extends Command
 
     public function handle()
     {
+        MyFunc::hello();
         $allUrls = explode("\n", Storage::get($this->allUrlsFilePath));
 
         //$this->output->progressStart(sizeof($allUrls));
@@ -101,8 +102,8 @@ class ParsTestCommand extends Command
             }
         }
 
-//        print_r($allMadeIns);
-//        print_r($statMadeIn);
+        //print_r($allMadeIns);
+        print_r($statMadeIn);
 
         //$this->output->progressFinish();
     }

@@ -2,8 +2,25 @@
 
 namespace App\MyFunctions;
 
+
+//___________               _____          __
+//\_   _____/_ __  ____    /  _  \________/  |_
+//  |    __)|  |  \/    \  /  /_\  \_  __ \   __\
+// |     \ |  |  /   |  \/    |    \  | \/|  |
+// \___  / |____/|___|  /\____|__  /__|   |__|
+//     \/             \/         \/
+//
+
 class MyFunc
 {
+    public static function hello():void {
+        echo "___________               _____          __   ".PHP_EOL;
+        echo "\_   _____/_ __  ____    /  _  \________/  |_ ".PHP_EOL;
+        echo " |    __)|  |  \/    \  /  /_\  \_  __ \   __|".PHP_EOL;
+        echo " |    \  |  |  /   |  \/    |    \  | \/|  |  ".PHP_EOL;
+        echo " \___ /  |____/|___|  /\___/\__  /__|   |__|  ".PHP_EOL;
+        echo "    \/              \/         \/             ".PHP_EOL;
+    }
 
     public static function parseCont(string $r, string $leftString, string $rightString): array
     {
