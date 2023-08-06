@@ -24,7 +24,7 @@ class CountriesSeeder extends Seeder
     public function run(): void
     {
         $countriesData = [
-            ['id' => 1, 'name' => null],
+            ['id' => 1, 'name' => 'Отсутствует'],
             ['id' => 2, 'name' => 'Китай'],
             ['id' => 3, 'name' => 'Индия'],
             ['id' => 4, 'name' => 'Турция'],
