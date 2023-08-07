@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Console\ParseData\ProductParserObject;
+use App\MyFunctions\ParsFunc;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -20,6 +21,9 @@ class ParsTestCommand extends Command
     private string $allUrlsFilePath = 'pars_data/all_urls.txt';
     private string $productPagesPath = 'pars_data/pages/'; // with /
 
+    /**
+     * @throws \Exception
+     */
     public function handle()
     {
         MyFunc::hello();
@@ -92,6 +96,8 @@ class ParsTestCommand extends Command
             $this->info($prod->similarProducts);
 
 
+            ParsFunc::convertToUtf8($prod->description);
+
         }
 
 
@@ -121,11 +127,18 @@ class ParsTestCommand extends Command
         ksort($statCatAll);
 
         print_r($statCatAll);
-        $someId = 0;
-        foreach ($statCatAll as $key => $value) {
-            $someId++;
-            echo("['id' => ".$someId.", 'name' => '".$key."'],").PHP_EOL;
+
+        foreach ($statCatAll as $name => $count) {
+            //$name = ParsFunc::filterData($name);
+            echo ($name . ' - ' . ParsFunc::detectAndEchoCharacterEncodings($name)) . PHP_EOL;
         }
+
+
+//        $someId = 0;
+//        foreach ($statCatAll as $key => $value) {
+//            $someId++;
+//            echo("['id' => ".$someId.", 'name' => '".$key."'],").PHP_EOL;
+//        }
 
 
     }
