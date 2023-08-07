@@ -33,6 +33,23 @@ class ParsFunc
         return $returnString;
     }
 
+    public static function categoryCorrector($retStr): string
+    {
+
+
+        // Work fine :)  but looks strange ))
+
+        $retStr = str_replace("джинсовая ткань", "Джинсовая ткань", $retStr);
+        $retStr = str_replace("Ткань для нижнего белья", "Ткани для нижнего белья", $retStr);
+        $retStr = str_replace("Подкладочные", "Подкладочная ткань", $retStr);
+        $retStr = str_replace("ткани для плащевок (плащей)", "Ткани для плащевок (плащей)", $retStr);
+
+
+        $retStr = rtrim($retStr, ";");
+
+        //print($retStr. '<br>');
+        return $retStr;
+    }
     public static function fabricStructureCorrector($retStr)
     {
 

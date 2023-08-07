@@ -129,6 +129,7 @@ class ProductParserObject
 
         $this->categoryAll = MyFunc::parseContMulti($this->r, '<span class="posted_in">', '</span>');
         $this->categoryAll = ParsFunc::parseTaggedString($this->categoryAll);
+        $this->categoryAll = ParsFunc::categoryCorrector($this->categoryAll);
 
         $this->purpose = MyFunc::parseContMulti($this->r, '<span>' . $naznach_lang, '</span>');
         $this->purpose = ParsFunc::parseTaggedString($this->purpose);

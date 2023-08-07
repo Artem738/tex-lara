@@ -118,8 +118,12 @@ class ParsTestCommand extends Command
                 }
             }
         }
+        krsort($statCatAll);
 
         print_r($statCatAll);
+        foreach ($statCatAll as $key => $value) {
+            //echo($key).PHP_EOL;
+        }
 
 
     }
