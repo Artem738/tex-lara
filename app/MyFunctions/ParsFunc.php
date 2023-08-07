@@ -2,8 +2,24 @@
 
 namespace App\MyFunctions;
 
+use Exception;
+
 class ParsFunc
 {
+
+    public static function filterData($data)
+    {
+        // Проверяем, является ли строка закодированным Unicode
+        if (preg_match('/\\\\u([0-9a-f]{4})/i', $data)) {
+            // Если строка содержит кодированные Unicode символы, выбрасываем исключение
+            throw new Exception('Некорректные данные: строка содержит закодированные Unicode символы');
+        }
+
+        // Другие фильтры и исправления данных, если необходимо...
+
+        return $data;
+    }
+
 
     public static function parseTaggedString($taggedData)
     {

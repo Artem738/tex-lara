@@ -10,8 +10,7 @@ class ProductController extends Controller
     public function index()
     {
         // Получаем информацию о продуктах и связанных странах
-        $products = Product::with('country')->get();
-
+        $products = Product::with('country', 'categories')->get();
         return view('products.index', compact('products'));
     }
 }
