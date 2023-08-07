@@ -8,7 +8,7 @@ use App\MyFunctions\ParsFunc;
 class ProductParserObject
 {
     /// UTIL
-    public string $r;
+    public ?string $r;
 
     /// DATA
 
@@ -70,6 +70,7 @@ class ProductParserObject
 
     public function __construct(string $r, string $url)
     {
+
 
         $this->r = $r;
 

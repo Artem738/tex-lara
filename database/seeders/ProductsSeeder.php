@@ -3,11 +3,14 @@
 namespace Database\Seeders;
 
 use App\Console\ParseData\ProductParserObject;
+use App\Models\Category;
 use App\MyFunctions\MyFunc;
 use Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class ProductsSeeder extends Seeder
 {
@@ -19,11 +22,14 @@ class ProductsSeeder extends Seeder
     {
         MyFunc::hello();
         $allUrls = explode("\n", Storage::get($this->allUrlsFilePath));
+        $progressBar = new ProgressBar(new ConsoleOutput, count($allUrls)); // BAR
+        $progressBar->start(); // BAR
+        $startTime = time(); // BAR
 
-        //for ($i = 0; $i < count($allUrls) - 1; $i++) {
-        $idCounter = 0;
+
+        $currentProductId = 0;
         foreach ($allUrls as $url) {
-            $idCounter++;
+            $currentProductId++;
             $fileHtmlString = Storage::get($this->productPagesPath . MyFunc::urlToFileName($url));
             $prod = new ProductParserObject($fileHtmlString, $url);
             try {
@@ -37,14 +43,14 @@ class ProductsSeeder extends Seeder
                 //print($idCounter . ' ' . $url . ' ' . $prod->madeIn . ' => ' . $country->id) . PHP_EOL;
 
 
-                DB::table('products')->insert(
+                $insertedProductId = DB::table('products')->insert(
                     [
-                        'id' => $idCounter,
+                        'id' => $currentProductId,
                         'name' => $prod->title,
                         'sku' => $prod->sku,
                         'good_url' => $prod->goodUrl,
                         'description' => $prod->description,
-                        'category_all' => $prod->categoryAll,
+                        // 'category_id' => null,
                         'purpose' => $prod->purpose,
                         'roll_width' => $prod->rollWidth,
                         'roll_width_category' => $prod->rollWidthCategory,
@@ -68,18 +74,64 @@ class ProductsSeeder extends Seeder
                         'updated_at' => now(),
                     ]
                 );
+                $insertedProductId = DB::getPdo()->lastInsertId();
+
+                // Get the list of categories from the database
+               // $categories = DB::table('categories')->get();
+
+                $categoriesToAdd = explode(';', $prod->categoryAll);
+
+                // Get the category ids for the categories to add
+                $categoryIdsToAdd = DB::table('categories')
+                    ->whereIn('name', $categoriesToAdd)
+                    ->pluck('id');
+
+                // Attach the category ids to the product
+                DB::table('product_category')->insert(
+                    $categoryIdsToAdd->map(function ($categoryId) use ($insertedProductId) {
+                        return [
+                            'product_id' => $insertedProductId,
+                            'category_id' => $categoryId,
+                        ];
+                    })->toArray()
+                );
+
+                // Get the first category associated with the product
+                $firstCategory = DB::table('product_category')
+                    ->where('product_id', $insertedProductId)
+                    ->first();
+
+                // Update the category_id in the products table
+                if ($firstCategory) {
+                    DB::table('products')
+                        ->where('id', $insertedProductId)
+                        ->update(['category_id' => $firstCategory->category_id]);
+                }
+
+
+
+
+
             } catch (Exception $e) {
-                continue; // Пропустить текущую итерацию цикла и перейти к следующей
+                var_dump($e->getMessage()); // Вывести сообщение об ошибке и остановить выполнение скрипта
+                die();
             }
-            if (sizeof($allUrls) + 1 == $idCounter + 2) {
+            $progressBar->setFormat(
+                "   Current Id:" . ($currentProductId) .
+                ", Batch-%current% [%bar%] %percent:3s%% %elapsed:5s%"
+            );
+            $progressBar->advance(); // BAR
+
+            if (sizeof($allUrls) + 1 == $currentProductId + 2) {
                 //print(sizeof($allUrls) . '==' . $idCounter+2) . PHP_EOL;
                 return;
             }
-            if ($idCounter == 10) {
+            if ($currentProductId == 10) {
                 //print(sizeof($allUrls) . '==' . $idCounter+2) . PHP_EOL;
-               // return;
+                // return;
             }
         }
+        $progressBar->finish(); // BAR
 
         //print_r($allUrls);
     }
