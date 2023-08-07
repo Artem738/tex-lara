@@ -43,6 +43,7 @@ class ParsFunc
         $retStr = str_replace("Ткань для нижнего белья", "Ткани для нижнего белья", $retStr);
         $retStr = str_replace("Подкладочные", "Подкладочная ткань", $retStr);
         $retStr = str_replace("ткани для плащевок (плащей)", "Ткани для плащевок (плащей)", $retStr);
+        $retStr = str_replace("Hовое*", "Hовое", $retStr);
 
 
         $retStr = rtrim($retStr, ";");
