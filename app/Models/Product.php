@@ -71,4 +71,9 @@ class Product extends Model
         return $this->belongsTo(Country::class, 'country_id', 'id');
     }
 
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
 }

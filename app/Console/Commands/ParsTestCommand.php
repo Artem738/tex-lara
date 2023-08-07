@@ -27,6 +27,7 @@ class ParsTestCommand extends Command
 
         //$this->output->progressStart(sizeof($allUrls));
         $allMadeIns = [];
+        $allCategoryAll = [];
 
         for ($i = 0; $i < count($allUrls) - 1; $i++) {  //463
 
@@ -42,6 +43,7 @@ class ParsTestCommand extends Command
             $this->info($i . " - good - " . $allUrls[$i] . " - good");
             //echo($prod);
             $allMadeIns[] = $prod->madeIn;
+            $allCategoryAll[] = $prod->categoryAll;
 
 
             /// CHEKING NON NULL DATA
@@ -101,11 +103,25 @@ class ParsTestCommand extends Command
                 $statMadeIn[$country] = 1;
             }
         }
-
         //print_r($allMadeIns);
         print_r($statMadeIn);
 
         //$this->output->progressFinish();
+        $statCatAll = array();
+        foreach ($allCategoryAll as $cat) {
+            $exCat = explode(";", $cat);
+            foreach ($exCat as $ex) {
+                if (isset($statCatAll[$ex])) {
+                    $statCatAll[$ex]++;
+                } else {
+                    $statCatAll[$ex] = 1;
+                }
+            }
+        }
+
+        print_r($statCatAll);
+
+
     }
 
 
