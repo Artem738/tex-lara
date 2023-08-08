@@ -8,6 +8,35 @@ class ParsFunc
 {
 
 
+    public static function showAssociativeArrayForArray(array $data): void
+    {
+        $stringData = "";
+        $index = 1;
+
+        foreach ($data as $name => $stat) {
+            $stringData .= "['id' => ".$index . ", 'name' => '" . $name."']," . PHP_EOL;
+            $index++;
+        }
+
+        print $stringData;
+    }
+
+    public static function formatPurposeString($inputString): string
+    {
+        $items = explode(';', $inputString);
+        $newItems = [];
+        foreach ($items as $item) {
+            // $item = trim($item);
+            $item = trim($item);
+            $newItems[] = mb_convert_case($item, MB_CASE_TITLE, 'UTF-8');
+            //ucfirst(strtolower(trim($item)));
+        }
+        //print_r($newItems);
+        //echo( ).PHP_EOL;
+        return implode(';', $newItems);
+    }
+
+
     public static function convertToUtf8($string)
     {
         // Подключаем расширение mbstring
@@ -28,7 +57,7 @@ class ParsFunc
             if ($encoding !== 'UTF-8') {
                 $oldCar = $character;
                 $character = mb_convert_encoding($character, 'UTF-8', $encoding);
-                echo "Символ: " . $oldCar . ", Кодировка: " . $encoding. "исправлено на - ".$character . PHP_EOL;
+                echo "Символ: " . $oldCar . ", Кодировка: " . $encoding . "исправлено на - " . $character . PHP_EOL;
             }
 
             // Добавляем символ в результат
@@ -59,9 +88,9 @@ class ParsFunc
             $encoding = mb_detect_encoding($character, 'UTF-8, ISO-8859-1, Windows-1251', true);
 
             // Выводим информацию о кодировке
-            if($encoding != 'UTF-8') {
-            echo "Символ: " . $character . ", Кодировка: " . $encoding . PHP_EOL;
-            die();
+            if ($encoding != 'UTF-8') {
+                echo "Символ: " . $character . ", Кодировка: " . $encoding . PHP_EOL;
+                die();
             }
         }
     }

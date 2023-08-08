@@ -15,7 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/test', [ProductController::class, 'test'])->name('products.test');
 
-Route::get('/', function () {
+Route::get(
+    '/', function () {
     return view('welcome');
-});
+}
+);

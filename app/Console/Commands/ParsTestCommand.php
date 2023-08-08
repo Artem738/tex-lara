@@ -32,6 +32,7 @@ class ParsTestCommand extends Command
         //$this->output->progressStart(sizeof($allUrls));
         $allMadeIns = [];
         $allCategoryAll = [];
+        $allPurpose = [];
 
         for ($i = 0; $i < count($allUrls) - 1; $i++) {  //463
 
@@ -48,6 +49,7 @@ class ParsTestCommand extends Command
             //echo($prod);
             $allMadeIns[] = $prod->madeIn;
             $allCategoryAll[] = $prod->categoryAll;
+            $allPurpose[] = $prod->purpose;
 
 
             /// CHEKING NON NULL DATA
@@ -65,12 +67,12 @@ class ParsTestCommand extends Command
             }
 
             if ($prod->rollWidth == null) {
-                $this->alert($prod->goodUrl . " -  rollWidth");
+                // $this->alert($prod->goodUrl . " -  rollWidth");
                 //die();
             }
 
             if ($prod->fabricTone == null) {
-                $this->alert(" -  fabricTone  - " . $prod->goodUrl);
+                // $this->alert(" -  fabricTone  - " . $prod->goodUrl);
                 //die();
             }
             if ($prod->description == null) {
@@ -93,15 +95,43 @@ class ParsTestCommand extends Command
                 $this->info($prod->price . ' $prod->price != $prod->regularPrice ' . $prod->regularPrice);
             }
 
-            $this->info($prod->similarProducts);
+            //$this->alert($prod->similarProducts);
 
+            if (!$this->checkPurposeOrDie($prod->purpose)) {
+                $this->alert($prod->goodUrl) . PHP_EOL;
+            }
 
-            ParsFunc::convertToUtf8($prod->description);
 
         }
+        // Вывод статистики
+        $madeInStats = $this->countMadeInStats($allMadeIns);
+        $categoryStats = $this->countCategoryStats($allCategoryAll);
+        $purposeStats = $this->countPurposeStats($allPurpose);
 
+        print_r($madeInStats);
+        print_r($categoryStats);
+        print_r($purposeStats);
+        ParsFunc::showAssociativeArrayForArray($purposeStats);
 
+    }
+
+    public function checkPurposeOrDie($purpose)
+    {
+        $purposeArray = explode(';', $purpose);
+
+        foreach ($purposeArray as $item) {
+            if (empty(trim($item))) {
+                return false; // Если есть пустой элемент, возвращаем false
+            }
+        }
+
+        return true; // Если все элементы не пустые, возвращаем true
+    }
+
+    public function countMadeInStats($allMadeIns)
+    {
         $statMadeIn = array();
+
         foreach ($allMadeIns as $country) {
             if (isset($statMadeIn[$country])) {
                 $statMadeIn[$country]++;
@@ -109,11 +139,14 @@ class ParsTestCommand extends Command
                 $statMadeIn[$country] = 1;
             }
         }
-        //print_r($allMadeIns);
-        print_r($statMadeIn);
 
-        //$this->output->progressFinish();
+        return $statMadeIn;
+    }
+
+    public function countCategoryStats($allCategoryAll)
+    {
         $statCatAll = array();
+
         foreach ($allCategoryAll as $cat) {
             $exCat = explode(";", $cat);
             foreach ($exCat as $ex) {
@@ -124,23 +157,28 @@ class ParsTestCommand extends Command
                 }
             }
         }
+
         ksort($statCatAll);
+        return $statCatAll;
+    }
 
-        print_r($statCatAll);
+    public function countPurposeStats($allPurpose)
+    {
+        $stataAllPurpose = array();
 
-        foreach ($statCatAll as $name => $count) {
-            //$name = ParsFunc::filterData($name);
-            echo ($name . ' - ' . ParsFunc::detectAndEchoCharacterEncodings($name)) . PHP_EOL;
+        foreach ($allPurpose as $pup) {
+            $exCat = explode(";", $pup);
+            foreach ($exCat as $ex) {
+                if (isset($stataAllPurpose[$ex])) {
+                    $stataAllPurpose[$ex]++;
+                } else {
+                    $stataAllPurpose[$ex] = 1;
+                }
+            }
         }
 
-
-//        $someId = 0;
-//        foreach ($statCatAll as $key => $value) {
-//            $someId++;
-//            echo("['id' => ".$someId.", 'name' => '".$key."'],").PHP_EOL;
-//        }
-
-
+        ksort($stataAllPurpose);
+        return $stataAllPurpose;
     }
 
 

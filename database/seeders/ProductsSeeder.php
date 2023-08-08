@@ -51,7 +51,7 @@ class ProductsSeeder extends Seeder
                         'good_url' => $prod->goodUrl,
                         'description' => $prod->description,
                         // 'category_id' => null,
-                        'purpose' => $prod->purpose,
+                        //'purpose' => $prod->purpose,
                         'roll_width' => $prod->rollWidth,
                         'roll_width_category' => $prod->rollWidthCategory,
                         'density' => $prod->density,
@@ -74,20 +74,14 @@ class ProductsSeeder extends Seeder
                         'updated_at' => now(),
                     ]
                 );
+                /* insert Category */
                 $insertedProductId = DB::getPdo()->lastInsertId();
-
-                // Get the list of categories from the database
-               // $categories = DB::table('categories')->get();
-
                 $categoriesToAdd = explode(';', $prod->categoryAll);
-
-                // Get the category ids for the categories to add
                 $categoryIdsToAdd = DB::table('categories')
                     ->whereIn('name', $categoriesToAdd)
                     ->pluck('id');
 
-                // Attach the category ids to the product
-                DB::table('product_category')->insert(
+                DB::table('category_product')->insert(
                     $categoryIdsToAdd->map(function ($categoryId) use ($insertedProductId) {
                         return [
                             'product_id' => $insertedProductId,
@@ -97,7 +91,7 @@ class ProductsSeeder extends Seeder
                 );
 
                 // Get the first category associated with the product
-                $firstCategory = DB::table('product_category')
+                $firstCategory = DB::table('category_product')
                     ->where('product_id', $insertedProductId)
                     ->first();
 
@@ -108,7 +102,33 @@ class ProductsSeeder extends Seeder
                         ->update(['category_id' => $firstCategory->category_id]);
                 }
 
+                /* insert Purpose  */
+                $purposesToAdd = explode(';', $prod->purposeAll);
+                $purposeIdsToAdd = DB::table('purposes')
+                    ->insertGetId(
+                        array_map(function ($purposeName) {
+                            return ['name' => $purposeName];
+                        }, $purposesToAdd)
+                    );
 
+                DB::table('purpose_product')->insert(
+                    array_map(function ($purposeId) use ($insertedProductId) {
+                        return [
+                            'purpose_id' => $purposeId,
+                            'product_id' => $insertedProductId,
+                        ];
+                    }, $purposeIdsToAdd)
+                );
+
+                $firstPurpose = DB::table('purpose_product')
+                    ->where('product_id', $insertedProductId)
+                    ->first();
+
+                if ($firstPurpose) {
+                    DB::table('products')
+                        ->where('id', $insertedProductId)
+                        ->update(['purpose_id' => $firstPurpose->purpose_id]);
+                }
 
 
 

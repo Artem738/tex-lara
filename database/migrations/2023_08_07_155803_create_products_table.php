@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('good_url')->unique();
             $table->text('description')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
-            $table->string('purpose')->nullable();
+            $table->unsignedBigInteger('purpose_id')->nullable();
             $table->string('roll_width')->nullable();
             $table->string('roll_width_category')->nullable();
             $table->string('density')->nullable();

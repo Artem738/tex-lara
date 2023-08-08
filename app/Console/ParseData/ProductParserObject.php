@@ -134,6 +134,8 @@ class ProductParserObject
 
         $this->purpose = MyFunc::parseContMulti($this->r, '<span>' . $naznach_lang, '</span>');
         $this->purpose = ParsFunc::parseTaggedString($this->purpose);
+        $this->purpose = ParsFunc::formatPurposeString($this->purpose);
+
 
         $this->rollWidth = MyFunc::parseContMulti($this->r, '<span>' . $shir_lang, '</span>');
         $this->rollWidth = ParsFunc::parseTaggedString($this->rollWidth);

@@ -15,7 +15,19 @@ class APIProductController extends Controller
     {
         $products = Product::all();
 
-        return ProductResource::collection($products);
+
+        return response()->json(
+            [
+                'data' => ProductResource::collection($products),
+                'Bearer' => '',
+                'meta' => [
+                    'info' => '',
+                ],
+            ],
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
