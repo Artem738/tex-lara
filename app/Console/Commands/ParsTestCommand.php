@@ -96,12 +96,9 @@ class ParsTestCommand extends Command
             }
 
             //$this->alert($prod->similarProducts);
-
             if (!$this->checkPurposeOrDie($prod->purpose)) {
                 $this->alert($prod->goodUrl) . PHP_EOL;
             }
-
-
         }
         // Вывод статистики
         $madeInStats = $this->countMadeInStats($allMadeIns);
