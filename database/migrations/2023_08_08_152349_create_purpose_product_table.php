@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('purpose_product', function (Blueprint $table) {
             $table->unsignedBigInteger('purpose_id');
             $table->unsignedBigInteger('product_id');
-            $table->timestamps();
 
             $table->primary(['purpose_id', 'product_id']);
 

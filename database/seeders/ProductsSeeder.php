@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Console\ParseData\ProductParserObject;
 use App\Models\Category;
+use App\Models\Purpose;
 use App\MyFunctions\MyFunc;
 use Exception;
 use Illuminate\Database\Seeder;
@@ -74,76 +75,23 @@ class ProductsSeeder extends Seeder
                         'updated_at' => now(),
                     ]
                 );
-                /* insert Category */
+
                 $insertedProductId = DB::getPdo()->lastInsertId();
 
+                // categories
                 $categoriesToAdd = explode(';', $prod->categoryAll);
-                $categoryIdsToAdd = DB::table('categories')
-                    ->whereIn('name', $categoriesToAdd)
-                    ->pluck('id');
+                $this->attachManyToMany((new Category)->getTable(), 'category_product', 'category_id', $categoriesToAdd, $insertedProductId);
 
-                DB::table('category_product')->insert(
-                    $categoryIdsToAdd->map(
-                        function ($categoryId) use ($insertedProductId) {
-                            return [
-                                'product_id' => $insertedProductId,
-                                'category_id' => $categoryId,
-                            ];
-                        }
-                    )->toArray()
-                );
-
-                // Get the first category associated with the product
-                $firstCategory = DB::table('category_product')
-                    ->where('product_id', $insertedProductId)
-                    ->first();
-
-                // Update the category_id in the products table
-                if ($firstCategory) {
-                    DB::table('products')
-                        ->where('id', $insertedProductId)
-                        ->update(['category_id' => $firstCategory->category_id]);
-                }
-
-                /* insert Purpose */
+                // purposes
                 $purposesToAdd = explode(';', $prod->purpose);
-                $purposeIdsToAdd = DB::table('purposes')
-                    ->whereIn('name', $purposesToAdd) // Use 'whereIn' instead of 'insertGetId'
-                    ->pluck('id');
-
-                DB::table('purpose_product')->insert(
-                    $purposeIdsToAdd->map(
-                        function ($purposeId) use ($insertedProductId) {
-                            return [
-                                'purpose_id' => $purposeId,
-                                'product_id' => $insertedProductId,
-                            ];
-                        }
-                    )->toArray()
-                );
-
-                // Get the first purpose associated with the product
-                $firstPurpose = DB::table('purpose_product')
-                    ->where('product_id', $insertedProductId)
-                    ->first();
-
-                // Update the purpose_id in the products table
-                if ($firstPurpose) {
-                    DB::table('products')
-                        ->where('id', $insertedProductId)
-                        ->update(['purpose_id' => $firstPurpose->purpose_id]);
-                }
+                $this->attachManyToMany((new Purpose)->getTable(), 'purpose_product', 'purpose_id', $purposesToAdd, $insertedProductId);
 
 
             } catch (Exception $e) {
                 var_dump($e->getMessage()); // Вывести сообщение об ошибке и остановить выполнение скрипта
                 die();
             }
-//            $progressBar->setFormat(
-//                "   Current Id:" . ($currentProductId) .
-//                ", Batch-%current% [%bar%] %percent:3s%% %elapsed:5s%"
-//            );
-//            $progressBar->advance(); // BAR
+
 
             if (sizeof($allUrls) + 1 == $currentProductId + 2) {
                 //print(sizeof($allUrls) . '==' . $idCounter+2) . PHP_EOL;
@@ -157,5 +105,35 @@ class ProductsSeeder extends Seeder
         //   $progressBar->finish(); // BAR
 
         //print_r($allUrls);
+    }
+
+    private function attachManyToMany($table, $relationTable, $relationColumn, $dataToAdd, $insertedProductId)
+    {
+        $dataIdsToAdd = DB::table($table)
+            ->whereIn('name', $dataToAdd)
+            ->pluck('id');
+
+        DB::table($relationTable)->insert(
+            $dataIdsToAdd->map(
+                function ($categoryId) use ($relationColumn, $insertedProductId) {
+                    return [
+                        'product_id' => $insertedProductId,
+                        $relationColumn => $categoryId,
+                    ];
+                }
+            )->toArray()
+        );
+
+        // Get the first category associated with the product
+        $firstDataAssociatedWithTheProduct = DB::table($relationTable)
+            ->where('product_id', $insertedProductId)
+            ->first();
+
+        // Update the category_id in the products table
+        if ($firstDataAssociatedWithTheProduct) {
+            DB::table('products')
+                ->where('id', $insertedProductId)
+                ->update([$relationColumn => $firstDataAssociatedWithTheProduct->$relationColumn]);
+        }
     }
 }

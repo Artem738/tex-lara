@@ -14,12 +14,21 @@ namespace App\MyFunctions;
 class MyFunc
 {
     public static function hello():void {
-        echo "___________               _____          __   ".PHP_EOL;
-        echo "\_   _____/_ __  ____    /  _  \________/  |_ ".PHP_EOL;
-        echo " |    __)|  |  \/    \  /  /_\  \_  __ \   __|".PHP_EOL;
-        echo " |    \  |  |  /   |  \/    |    \  | \/|  |  ".PHP_EOL;
-        echo " \___ /  |____/|___|  /\___/\__  /__|   |__|  ".PHP_EOL;
-        echo "    \/              \/         \/             ".PHP_EOL;
+//        echo "___________               _____          __   ".PHP_EOL;
+//        echo "\_   _____/_ __  ____    /  _  \________/  |_ ".PHP_EOL;
+//        echo " |    __)|  |  \/    \  /  /_\  \_  __ \   __|".PHP_EOL;
+//        echo " |    \  |  |  /   |  \/    |    \  | \/|  |  ".PHP_EOL;
+//        echo " \___ /  |____/|___|  /\___/\__  /__|   |__|  ".PHP_EOL;
+//        echo "    \/              \/         \/             ".PHP_EOL;
+
+        echo "___________               _____          __    _________            .___       ".PHP_EOL;
+        echo "\_   _____/_ __  ____    /  _  \________/  |_  \_   ___ \  ____   __| _/____   ".PHP_EOL;
+        echo " |    __)|  |  \/    \  /  /_\  \_  __ \   __\ /    \  \/ /  _ \ / __ |/ __ \  ".PHP_EOL;
+        echo " |     \ |  |  /   |  \/    |    \  | \/|  |   \     \___(  <_> ) /_/ \  ___/  ".PHP_EOL;
+        echo " \___  / |____/|___|  /\____|__  /__|   |__|    \______  /\____/\____ |\___  > ".PHP_EOL;
+        echo "     \/             \/         \/                      \/            \/    \/  ".PHP_EOL;
+        echo PHP_EOL;
+        echo PHP_EOL;
     }
 
     public static function parseCont(string $r, string $leftString, string $rightString): array
