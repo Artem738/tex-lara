@@ -17,10 +17,13 @@ class ProductResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'sku' => $this->sku,
+            'goodUrl' => $this->good_url,
             'name' => $this->name,
             'price' => $this->price,
             'country' => $this->country->name,
             'categories' => $this->categories->pluck('name'),
+            'purpose' => $this->purposes->pluck('name'),
             // Добавьте другие поля, которые вы хотите включить в JSON
         ];
     }

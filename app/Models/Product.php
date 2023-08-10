@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null $rollDiscount
  * @property string|null $prodStatus
  * @property string|null $similarProducts
+ * @method static findOrFail($id)
  */
 class Product extends Model
 {

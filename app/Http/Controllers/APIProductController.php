@@ -41,9 +41,24 @@ class APIProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+       // print($id); die();
+        $product = Product::findOrFail($id);
+
+        //print($product->good_url).PHP_EOL;
+        return response()->json(
+            [
+                'data' => new ProductResource($product),
+                'Bearer' => '',
+                'meta' => [
+                    'info' => '',
+                ],
+            ],
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**

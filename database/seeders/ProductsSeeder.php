@@ -22,9 +22,9 @@ class ProductsSeeder extends Seeder
     {
         MyFunc::hello();
         $allUrls = explode("\n", Storage::get($this->allUrlsFilePath));
-        $progressBar = new ProgressBar(new ConsoleOutput, count($allUrls)); // BAR
-        $progressBar->start(); // BAR
-        $startTime = time(); // BAR
+//        $progressBar = new ProgressBar(new ConsoleOutput, count($allUrls)); // BAR
+//        $progressBar->start(); // BAR
+//        $startTime = time(); // BAR
 
 
         $currentProductId = 0;
@@ -51,7 +51,7 @@ class ProductsSeeder extends Seeder
                         'good_url' => $prod->goodUrl,
                         'description' => $prod->description,
                         // 'category_id' => null,
-                        //'purpose' => $prod->purpose,
+                        //'purpose_id' =>  null,
                         'roll_width' => $prod->rollWidth,
                         'roll_width_category' => $prod->rollWidthCategory,
                         'density' => $prod->density,
@@ -76,18 +76,21 @@ class ProductsSeeder extends Seeder
                 );
                 /* insert Category */
                 $insertedProductId = DB::getPdo()->lastInsertId();
+
                 $categoriesToAdd = explode(';', $prod->categoryAll);
                 $categoryIdsToAdd = DB::table('categories')
                     ->whereIn('name', $categoriesToAdd)
                     ->pluck('id');
 
                 DB::table('category_product')->insert(
-                    $categoryIdsToAdd->map(function ($categoryId) use ($insertedProductId) {
-                        return [
-                            'product_id' => $insertedProductId,
-                            'category_id' => $categoryId,
-                        ];
-                    })->toArray()
+                    $categoryIdsToAdd->map(
+                        function ($categoryId) use ($insertedProductId) {
+                            return [
+                                'product_id' => $insertedProductId,
+                                'category_id' => $categoryId,
+                            ];
+                        }
+                    )->toArray()
                 );
 
                 // Get the first category associated with the product
@@ -102,28 +105,29 @@ class ProductsSeeder extends Seeder
                         ->update(['category_id' => $firstCategory->category_id]);
                 }
 
-                /* insert Purpose  */
-                $purposesToAdd = explode(';', $prod->purposeAll);
+                /* insert Purpose */
+                $purposesToAdd = explode(';', $prod->purpose);
                 $purposeIdsToAdd = DB::table('purposes')
-                    ->insertGetId(
-                        array_map(function ($purposeName) {
-                            return ['name' => $purposeName];
-                        }, $purposesToAdd)
-                    );
+                    ->whereIn('name', $purposesToAdd) // Use 'whereIn' instead of 'insertGetId'
+                    ->pluck('id');
 
                 DB::table('purpose_product')->insert(
-                    array_map(function ($purposeId) use ($insertedProductId) {
-                        return [
-                            'purpose_id' => $purposeId,
-                            'product_id' => $insertedProductId,
-                        ];
-                    }, $purposeIdsToAdd)
+                    $purposeIdsToAdd->map(
+                        function ($purposeId) use ($insertedProductId) {
+                            return [
+                                'purpose_id' => $purposeId,
+                                'product_id' => $insertedProductId,
+                            ];
+                        }
+                    )->toArray()
                 );
 
+                // Get the first purpose associated with the product
                 $firstPurpose = DB::table('purpose_product')
                     ->where('product_id', $insertedProductId)
                     ->first();
 
+                // Update the purpose_id in the products table
                 if ($firstPurpose) {
                     DB::table('products')
                         ->where('id', $insertedProductId)
@@ -131,16 +135,15 @@ class ProductsSeeder extends Seeder
                 }
 
 
-
             } catch (Exception $e) {
                 var_dump($e->getMessage()); // Вывести сообщение об ошибке и остановить выполнение скрипта
                 die();
             }
-            $progressBar->setFormat(
-                "   Current Id:" . ($currentProductId) .
-                ", Batch-%current% [%bar%] %percent:3s%% %elapsed:5s%"
-            );
-            $progressBar->advance(); // BAR
+//            $progressBar->setFormat(
+//                "   Current Id:" . ($currentProductId) .
+//                ", Batch-%current% [%bar%] %percent:3s%% %elapsed:5s%"
+//            );
+//            $progressBar->advance(); // BAR
 
             if (sizeof($allUrls) + 1 == $currentProductId + 2) {
                 //print(sizeof($allUrls) . '==' . $idCounter+2) . PHP_EOL;
@@ -151,7 +154,7 @@ class ProductsSeeder extends Seeder
                 // return;
             }
         }
-        $progressBar->finish(); // BAR
+        //   $progressBar->finish(); // BAR
 
         //print_r($allUrls);
     }

@@ -1,0 +1,6 @@
+### GET request with environment variables
+GET http://tex-lara.loc/api/products/21
+
+Accept: application/json
+
+###

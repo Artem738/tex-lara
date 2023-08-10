@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -47,7 +48,7 @@ class PurposeSeeder extends Seeder
 
 
             try {
-                DB::table('categories')->insert(
+                DB::table('purposes')->insert(
                     [
                         'id' => $pup['id'],
                         'name' => $pup['name'],
