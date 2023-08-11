@@ -32,7 +32,6 @@ class MyFunc
         echo "          #      " . Carbon::now() . "          #" .PHP_EOL;
         echo "          #####################################" . PHP_EOL;
         echo PHP_EOL;
-        die();
     }
 
     public static function parseCont(string $r, string $leftString, string $rightString): array

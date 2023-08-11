@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('good_url')->unique();
             $table->text('description')->nullable();
-            $table->unsignedBigInteger('category_id')->nullable();
-            $table->unsignedBigInteger('purpose_id')->nullable();
+           // $table->unsignedBigInteger('category_id')->nullable();
+           // $table->unsignedBigInteger('purpose_id')->nullable();
             $table->string('roll_width')->nullable();
             $table->string('roll_width_category')->nullable();
             $table->string('density')->nullable();
@@ -41,9 +41,9 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('set null');
-
-
-           $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
+//
+//
+//           $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
 
 
         });
