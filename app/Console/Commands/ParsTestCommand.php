@@ -50,6 +50,7 @@ class ParsTestCommand extends Command
             $allMadeIns[] = $prod->madeIn;
             $allCategoryAll[] = $prod->categoryAll;
             $allPurpose[] = $prod->purpose;
+            $allFabricStructure[] = $prod->fabricStructure;
 
 
             /// CHEKING NON NULL DATA
@@ -86,7 +87,7 @@ class ParsTestCommand extends Command
             }
             //echo($prod->price);
 
-            if ($prod->goodUrl == "https://iamtex.com.ua/product/bifleks-zhatka-14/") {
+            if ($prod->sku == "") {
                 // echo($prod);
                 // die();
             }
@@ -101,31 +102,40 @@ class ParsTestCommand extends Command
             }
         }
         // Вывод статистики
-        $madeInStats = $this->countMadeInStats($allMadeIns);
-        $categoryStats = $this->countCategoryStats($allCategoryAll);
-        $purposeStats = $this->countPurposeStats($allPurpose);
+//        $madeInStats = $this->countMadeInStats($allMadeIns);
+//        $categoryStats = $this->countSemicolonArrayStats($allCategoryAll);
+//        $purposeStats = $this->countSemicolonArrayStats($allPurpose);
+//showAssociativeArrayForArray
+        print_r($this->countSemicolonArrayStats($allFabricStructure));
 
-        print_r($madeInStats);
-        print_r($categoryStats);
-        print_r($purposeStats);
-        ParsFunc::showAssociativeArrayForArray($purposeStats);
 
     }
 
-    public function checkPurposeOrDie($purpose)
-    {
-        $purposeArray = explode(';', $purpose);
 
-        foreach ($purposeArray as $item) {
-            if (empty(trim($item))) {
-                return false; // Если есть пустой элемент, возвращаем false
+
+    public function countSemicolonArrayStats($dataArray): array
+    {
+        $statArray = array();
+        foreach ($dataArray as $data) {
+            $exData = explode(";", $data);
+            foreach ($exData as $ex) {
+                if (isset($statArray[$ex])) {
+                    $statArray[$ex]++;
+                } else {
+                    $statArray[$ex] = 1;
+                }
             }
         }
-
-        return true; // Если все элементы не пустые, возвращаем true
+        // ksort($statCatAll);
+        uasort(
+            $statArray, function ($b, $a) {
+            return $a - $b; // Сортировка по значению в порядке возрастания
+        }
+        );
+        return $statArray;
     }
 
-    public function countMadeInStats($allMadeIns)
+    public function countMadeInStats($allMadeIns): array
     {
         $statMadeIn = array();
 
@@ -140,43 +150,18 @@ class ParsTestCommand extends Command
         return $statMadeIn;
     }
 
-    public function countCategoryStats($allCategoryAll)
+    public function checkPurposeOrDie($purpose): bool
     {
-        $statCatAll = array();
+        $purposeArray = explode(';', $purpose);
 
-        foreach ($allCategoryAll as $cat) {
-            $exCat = explode(";", $cat);
-            foreach ($exCat as $ex) {
-                if (isset($statCatAll[$ex])) {
-                    $statCatAll[$ex]++;
-                } else {
-                    $statCatAll[$ex] = 1;
-                }
+        foreach ($purposeArray as $item) {
+            if (empty(trim($item))) {
+                return false;
             }
         }
-
-        ksort($statCatAll);
-        return $statCatAll;
+        return true;
     }
 
-    public function countPurposeStats($allPurpose)
-    {
-        $stataAllPurpose = array();
-
-        foreach ($allPurpose as $pup) {
-            $exCat = explode(";", $pup);
-            foreach ($exCat as $ex) {
-                if (isset($stataAllPurpose[$ex])) {
-                    $stataAllPurpose[$ex]++;
-                } else {
-                    $stataAllPurpose[$ex] = 1;
-                }
-            }
-        }
-
-        ksort($stataAllPurpose);
-        return $stataAllPurpose;
-    }
 
 
 }

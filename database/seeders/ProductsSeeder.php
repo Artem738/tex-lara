@@ -123,17 +123,5 @@ class ProductsSeeder extends Seeder
                 }
             )->toArray()
         );
-
-//        // Get the first category associated with the product
-//        $firstDataAssociatedWithTheProduct = DB::table($relationTable)
-//            ->where('product_id', $insertedProductId)
-//            ->first();
-//
-//        // Update the category_id in the products table
-//        if ($firstDataAssociatedWithTheProduct) {
-//            DB::table('products')
-//                ->where('id', $insertedProductId)
-//                ->update([$relationColumn => $firstDataAssociatedWithTheProduct->$relationColumn]);
-//        }
     }
 }
