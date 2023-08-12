@@ -130,7 +130,7 @@ class ProductParserObject
 
         $this->categoryAll = MyFunc::parseContMulti($this->r, '<span class="posted_in">', '</span>');
         $this->categoryAll = ParsFunc::parseTaggedString($this->categoryAll);
-        $this->categoryAll = ParsFunc::categoryCorrector($this->categoryAll);
+        $this->categoryAll = $this->categoryCorrector($this->categoryAll);
 
         $this->purpose = MyFunc::parseContMulti($this->r, '<span>' . $naznach_lang, '</span>');
         $this->purpose = ParsFunc::parseTaggedString($this->purpose);
@@ -162,7 +162,9 @@ class ProductParserObject
 
         $this->fabricStructure = MyFunc::parseContMulti($this->r, '<div class="product-fabric">', '</div>');
         $this->fabricStructure = MyFunc::parseContMulti($this->fabricStructure, $sostav . '</p><p>', '</p>');
-        $this->fabricStructure = ParsFunc::fabricStructureCorrector($this->fabricStructure);
+        $this->fabricStructure = $this->fabricStructureCorrector($this->fabricStructure);
+        $this->fabricStructure = $this->explodeAndFormatFabricStructureString($this->fabricStructure);
+        $this->fabricStructure = $this->lastFabricCorection($this->fabricStructure);
 
 
         $price = MyFunc::parseContMulti($this->r, '<meta itemprop="price" content="', '"');
@@ -216,18 +218,109 @@ class ProductParserObject
         }
 
 
-
-         $this->similarProducts = MyFunc::parseContMulti($this->r, 'button-for-search" onclick="location.href=', ';">');
-        $this->similarProducts = str_replace("'","", $this->similarProducts);
-        $this->similarProducts = str_replace("/?","", $this->similarProducts);
+        $this->similarProducts = MyFunc::parseContMulti($this->r, 'button-for-search" onclick="location.href=', ';">');
+        $this->similarProducts = str_replace("'", "", $this->similarProducts);
+        $this->similarProducts = str_replace("/?", "", $this->similarProducts);
 
 //        echo($this);
 //        $this->checkData();
 //        die();
     }
 
+##############  C O R R E C T O R S  #######################
 
-##############  F U N C T I O N S #######################
+    public function lastFabricCorection($inputString)
+    {
+        $inputString = str_replace("100%;ПОЛИЭФИР", "ПОЛИЭФИР 100%", $inputString);
+        return $inputString;
+
+    }
+
+    public static function explodeAndFormatFabricStructureString($inputString): string
+    {
+        $items = explode(';', $inputString);
+        $newItems = [];
+        foreach ($items as $item) {
+
+            if (stripos($item, "NBSP") !== false) {
+                //die($inputString);
+            } else {
+                $item = ParsFunc::megaTrim($item);
+                $item = str_replace("/ ", "", $item);
+                $item = str_replace("(", "", $item);
+                $item = str_replace("ДВОЙНОЙ ДАБЛ", "", $item);
+                $item = str_replace("СПАНДЕКС6%", "СПАНДЕКС 6%", $item);
+                $item = str_replace("РАЙОН18%", "РАЙОН 18%", $item);
+                $item = str_replace("ОРГАНЗА СОСТАВ ТЕНСЕЛ 66%", "ТЕНСЕЛ 66%", $item);
+                $newItems[] = $item;
+                //ucfirst(strtolower(trim($item)));
+            }
+
+        }
+        //print_r($newItems);
+        //echo( ).PHP_EOL;
+        $retStr = implode(';', $newItems);
+        return rtrim($retStr, ";");
+    }
+
+
+    public static function categoryCorrector($retStr): string
+    {
+        $retStr = str_replace("джинсовая ткань", "Джинсовая ткань", $retStr);
+        $retStr = str_replace("Ткань для нижнего белья", "Ткани для нижнего белья", $retStr);
+        $retStr = str_replace("Подкладочные", "Подкладочная ткань", $retStr);
+        $retStr = str_replace("ткани для плащевок (плащей)", "Ткани для плащевок (плащей)", $retStr);
+        $retStr = str_replace("Hовое*", "Hовое", $retStr);
+
+        $retStr = rtrim($retStr, ";");
+
+        return $retStr;
+    }
+
+    function fabricStructureCorrector($retStr): string
+    {
+
+        // Work fine :)  but looks strange ))
+        $retStr = mb_strtoupper($retStr);
+        $retStr = str_replace("ШОВК", "ШЕЛК", $retStr);
+        $retStr = str_replace("ДАБЛКАШЕМИР", "", $retStr);
+        $retStr = str_replace(" ДАБЛ (ДВОЙНОЙ)", "", $retStr);
+        $retStr = str_replace("ECONYL", "ЭКОНИЛ", $retStr);
+        $retStr = str_replace("TERYLENE", "ТЕРИЛЕН", $retStr);
+        $retStr = str_replace("COTTON", "ХЛОПОК", $retStr);
+        $retStr = str_replace("SPANDEX", "СПАНДЕКС", $retStr);
+        $retStr = str_replace("RAYON", "РАЙОН", $retStr);
+        $retStr = str_replace("; ", "(", $retStr);
+        $retStr = str_replace("( ", "(", $retStr);
+        $retStr = str_replace(" )", ")", $retStr);
+        $retStr = str_replace("(ХЛОПОК)", "", $retStr);
+        $retStr = str_replace("ОРГАНИКА", "", $retStr);
+        $retStr = str_replace("КОТОН", "ХЛОПОК", $retStr);
+        $retStr = str_replace("КОТТОН", "ХЛОПОК", $retStr);
+        $retStr = str_replace("ПОЛИЄСТЕР", "ПОЛИЭФИР", $retStr);
+        $retStr = str_replace("ПОЛИЭСТЕР", "ПОЛИЭФИР", $retStr);
+        $retStr = str_replace("ПОЛИЕСТЕР", "ПОЛИЭФИР", $retStr);
+        $retStr = str_replace("ПОЛИУРEТАН", "ПОЛИУРЕТАН", $retStr);
+        $retStr = str_replace("ЄЛАСТАН", "СПАНДЕКС", $retStr);
+        $retStr = str_replace("ЭЛАСТАН", "СПАНДЕКС", $retStr);
+        $retStr = str_replace("ЭЛАСТАН", "СПАНДЕКС", $retStr);
+        $retStr = str_replace("ЕЛАСТАН", "СПАНДЕКС", $retStr);
+        $retStr = str_replace(";", "", $retStr);
+        $retStr = str_replace(". ", "", $retStr);
+        $retStr = str_replace("% ,", "%", $retStr);
+        $retStr = str_replace("%,", "%", $retStr);
+        $retStr = str_replace("%", "%,", $retStr);
+        $retStr = str_replace(",", ";", $retStr);
+        $retStr = preg_replace('/[\s]+/mu', ' ', $retStr);
+
+        $retStr = rtrim($retStr, ";");
+
+        //print($retStr. '<br>');
+        return $retStr;
+    }
+
+
+############## 222  F U N C T I O N S  222 #######################
 
     public function __toString()
     {

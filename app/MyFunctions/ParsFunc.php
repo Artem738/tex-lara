@@ -8,18 +8,7 @@ class ParsFunc
 {
 
 
-    public static function showAssociativeArrayForArray(array $data): void
-    {
-        $stringData = "";
-        $index = 1;
 
-        foreach ($data as $name => $stat) {
-            $stringData .= "['id' => ".$index . ", 'name' => '" . $name."']," . PHP_EOL;
-            $index++;
-        }
-
-        print $stringData;
-    }
 
     public static function formatPurposeString($inputString): string
     {
@@ -215,57 +204,6 @@ class ParsFunc
         return $returnString;
     }
 
-    public static function categoryCorrector($retStr): string
-    {
-
-
-        // Work fine :)  but looks strange ))
-
-        $retStr = str_replace("джинсовая ткань", "Джинсовая ткань", $retStr);
-        $retStr = str_replace("Ткань для нижнего белья", "Ткани для нижнего белья", $retStr);
-        $retStr = str_replace("Подкладочные", "Подкладочная ткань", $retStr);
-        $retStr = str_replace("ткани для плащевок (плащей)", "Ткани для плащевок (плащей)", $retStr);
-        $retStr = str_replace("Hовое*", "Hовое", $retStr);
-
-
-        $retStr = rtrim($retStr, ";");
-
-        //print($retStr. '<br>');
-        return $retStr;
-    }
-
-    public static function fabricStructureCorrector($retStr)
-    {
-
-
-        // Work fine :)  but looks strange ))
-        $retStr = mb_strtoupper($retStr);
-        $retStr = str_replace("( ", "(", $retStr);
-        $retStr = str_replace(" )", ")", $retStr);
-        $retStr = str_replace("(ХЛОПОК)", "", $retStr);
-        $retStr = str_replace("ОРГАНИКА", "", $retStr);
-        $retStr = str_replace("КОТОН", "ХЛОПОК", $retStr);
-        $retStr = str_replace("КОТТОН", "ХЛОПОК", $retStr);
-        $retStr = str_replace("ПОЛИЄСТЕР", "ПОЛИЭФИР", $retStr);
-        $retStr = str_replace("ПОЛИЭСТЕР", "ПОЛИЭФИР", $retStr);
-        $retStr = str_replace("ПОЛИЕСТЕР", "ПОЛИЭФИР", $retStr);
-        $retStr = str_replace("ПОЛИУРEТАН", "ПОЛИУРЕТАН", $retStr);
-        $retStr = str_replace("ЭЛАСТАН", "СПАНДЕКС", $retStr);
-        $retStr = str_replace("ЭЛАСТАН", "СПАНДЕКС", $retStr);
-        $retStr = str_replace("ЕЛАСТАН", "СПАНДЕКС", $retStr);
-        $retStr = str_replace(";", "", $retStr);
-        $retStr = str_replace(". ", "", $retStr);
-        $retStr = str_replace("% ,", "%", $retStr);
-        $retStr = str_replace("%,", "%", $retStr);
-        $retStr = str_replace("%", "%,", $retStr);
-        $retStr = str_replace(",", ";", $retStr);
-        $retStr = preg_replace('/[\s]+/mu', ' ', $retStr);
-
-        $retStr = rtrim($retStr, ";");
-
-        //print($retStr. '<br>');
-        return $retStr;
-    }
 
 
     public static function megaTrim($csvdata)

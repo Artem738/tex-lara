@@ -79,7 +79,12 @@ class Product extends Model
 
     public function purposes()
     {
-        return $this->belongsToMany(Purpose::class ,'purpose_product');
+        return $this->belongsToMany(Purpose::class, 'purpose_product');
+    }
+
+    public function fabrics()
+    {
+        return $this->belongsToMany(Fabric::class, 'fabric_product');
     }
 
 }
