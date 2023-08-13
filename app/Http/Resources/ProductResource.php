@@ -23,6 +23,7 @@ class ProductResource extends JsonResource
             'price' => $this->price,
             'country' => $this->country->name,
             'categories' => $this->categories->pluck('name'),
+            'fabric' => $this->fabrics->pluck('name'),
             'purpose' => $this->purposes->pluck('name'),
             // Добавьте другие поля, которые вы хотите включить в JSON
         ];

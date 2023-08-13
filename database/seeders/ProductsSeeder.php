@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Console\ParseData\ProductParserObject;
 use App\Models\Category;
+use App\Models\Fabric;
 use App\Models\Purpose;
 use App\MyFunctions\MyFunc;
 use Exception;
@@ -86,6 +87,9 @@ class ProductsSeeder extends Seeder
                 $purposesToAdd = explode(';', $prod->purpose);
                 $this->attachManyToMany((new Purpose)->getTable(), 'purpose_product', 'purpose_id', $purposesToAdd, $insertedProductId);
 
+                // purposes
+                $fabricsToAdd = explode(';', $prod->fabricStructure);
+                $this->attachManyToMany((new Fabric)->getTable(), 'fabric_product', 'fabric_id', $fabricsToAdd, $insertedProductId);
 
             } catch (Exception $e) {
                 var_dump($e->getMessage()); // Вывести сообщение об ошибке и остановить выполнение скрипта

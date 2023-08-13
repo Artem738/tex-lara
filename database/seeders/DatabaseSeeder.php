@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Fabric;
 use App\MyFunctions\MyFunc;
 use Illuminate\Database\Seeder;
 
@@ -21,7 +22,9 @@ class DatabaseSeeder extends Seeder
                 CountriesSeeder::class,
                 CategoriesSeeder::class,
                 PurposeSeeder::class,
+                FabricsSeeder::class,
                 ProductsSeeder::class,
+
             ]
         );
 
