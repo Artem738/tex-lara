@@ -52,15 +52,12 @@ class ProductsSeeder extends Seeder
                         'sku' => $prod->sku,
                         'good_url' => $prod->goodUrl,
                         'description' => $prod->description,
-                        // 'category_id' => null,
-                        //'purpose_id' =>  null,
                         'roll_width' => $prod->rollWidth,
                         'roll_width_category' => $prod->rollWidthCategory,
                         'density' => $prod->density,
                         'country_id' => $country->id,
                         'fabric_tone' => $prod->fabricTone,
                         'pattern_type' => $prod->patternType,
-                        'fabric_structure' => $prod->fabricStructure,
                         'price' => $prod->price,
                         'regular_price' => $prod->regularPrice,
                         'sale_price' => $prod->salePrice,
@@ -101,10 +98,10 @@ class ProductsSeeder extends Seeder
                 //print(sizeof($allUrls) . '==' . $idCounter+2) . PHP_EOL;
                 return;
             }
-            if ($currentProductId == 10) {
-                //print(sizeof($allUrls) . '==' . $idCounter+2) . PHP_EOL;
-                // return;
-            }
+//            if ($currentProductId == 10) {
+//                //print(sizeof($allUrls) . '==' . $idCounter+2) . PHP_EOL;
+//                // return;
+//            }
         }
         //   $progressBar->finish(); // BAR
 

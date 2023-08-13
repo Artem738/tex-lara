@@ -25,7 +25,6 @@ return new class extends Migration
             $table->unsignedBigInteger('country_id')->nullable();
             $table->string('fabric_tone')->nullable();
             $table->string('pattern_type')->nullable();
-            $table->string('fabric_structure')->nullable();
             $table->float('price')->nullable();
             $table->float('regular_price')->nullable();
             $table->float('sale_price')->nullable();
