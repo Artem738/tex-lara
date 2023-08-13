@@ -34,6 +34,7 @@ class ParsTestCommand extends Command
         $allMadeIns = [];
         $allCategoryAll = [];
         $allPurpose = [];
+        $allFabricTone = [];
 
         for ($i = 0; $i < count($allUrls) - 1; $i++) {  //463
 
@@ -51,7 +52,7 @@ class ParsTestCommand extends Command
             $allMadeIns[] = $prod->madeIn;
             $allCategoryAll[] = $prod->categoryAll;
             $allPurpose[] = $prod->purpose;
-            $allFabricStructure[] = $prod->fabricStructure;
+            $allFabricTones[] = $prod->fabricTone;
 
 
             /// CHEKING NON NULL DATA
@@ -120,7 +121,12 @@ class ParsTestCommand extends Command
         //print_r($this->getUniqueFabricsNames($allFabricStructure));
         //print_r($this->countSemicolonArrayStats($allFabricStructure));
 
-        $this->showAssociativeArrayForArray($this->countSemicolonArrayStats($allFabricStructure));
+        //$this->showAssociativeArrayForArray($this->countSemicolonArrayStats($allFabricStructure));
+
+        $fabricToneStats = $this->countSemicolonArrayStats($allFabricTones);
+
+        print_r($fabricToneStats);
+
     }
 
     ######  F U N C T I O N S ###########

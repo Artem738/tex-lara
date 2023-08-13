@@ -156,6 +156,7 @@ class ProductParserObject
 
         $this->fabricTone = MyFunc::parseContMulti($this->r, '<span>' . $ottenok_lang, '</span>');
         $this->fabricTone = ParsFunc::parseTaggedString($this->fabricTone);
+        $this->fabricTone = $this->explodeAndFormatFabricToneString($this->fabricTone);
 
         $this->patternType = MyFunc::parseContMulti($this->r, 'class="tagged_as">', '</span>');
         $this->patternType = ParsFunc::parseTaggedString($this->patternType);
@@ -229,13 +230,40 @@ class ProductParserObject
 
 ##############  C O R R E C T O R S  #######################
 
+
+
+    public static function explodeAndFormatFabricToneString($inputString): string
+    {
+        $items = explode(';', $inputString);
+        $newItems = [];
+        foreach ($items as $item) {
+
+            if (stripos($item, "NBSP") !== false) {
+                //die($inputString);
+            } else {
+                $item = ParsFunc::megaTrim($item);
+//                $item = str_replace("Голубой/", "Голубой", $item);
+//                $item = str_replace("Принт/", "Принт", $item);
+//                $item = str_replace("Кофейный,", "Кофейный", $item);
+//                $item = str_replace("Синий/принт,", "Синий-принт", $item);
+
+                $newItems[] = $item;
+                //ucfirst(strtolower(trim($item)));
+            }
+
+        }
+        //print_r($newItems);
+        //echo( ).PHP_EOL;
+        $retStr = implode(';', $newItems);
+        return rtrim($retStr, ";");
+    }
+
     public function lastFabricCorection($inputString)
     {
         $inputString = str_replace("100%;ПОЛИЭФИР", "ПОЛИЭФИР 100%", $inputString);
         return $inputString;
 
     }
-
     public static function explodeAndFormatFabricStructureString($inputString): string
     {
         $items = explode(';', $inputString);
