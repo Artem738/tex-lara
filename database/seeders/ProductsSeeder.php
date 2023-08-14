@@ -22,11 +22,10 @@ class ProductsSeeder extends Seeder
 
     public function run(): void
     {
-        MyFunc::hello();
+        //MyFunc::hello();
         $allUrls = explode("\n", Storage::get($this->allUrlsFilePath));
-//        $progressBar = new ProgressBar(new ConsoleOutput, count($allUrls)); // BAR
-//        $progressBar->start(); // BAR
-//        $startTime = time(); // BAR
+        $progressBar = new ProgressBar(new ConsoleOutput, count($allUrls)); // BAR
+        $progressBar->start(); // BAR
 
 
         $currentProductId = 0;
@@ -94,8 +93,13 @@ class ProductsSeeder extends Seeder
             }
 
 
+            $progressBar->setFormat(
+                "Seeding Database, " .
+                "Current Id:%current% [%bar%] %percent:3s%% %elapsed:5s%"
+            );
+            $progressBar->advance();
+
             if (sizeof($allUrls) + 1 == $currentProductId + 2) {
-                //print(sizeof($allUrls) . '==' . $idCounter+2) . PHP_EOL;
                 return;
             }
 //            if ($currentProductId == 10) {
@@ -103,9 +107,7 @@ class ProductsSeeder extends Seeder
 //                // return;
 //            }
         }
-        //   $progressBar->finish(); // BAR
-
-        //print_r($allUrls);
+        $progressBar->finish(); // BAR
     }
 
     private function attachManyToMany($table, $relationTable, $relationColumn, $dataToAdd, $insertedProductId)

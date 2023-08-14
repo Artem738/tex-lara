@@ -208,9 +208,9 @@ class ProductParserObject
         $this->allImgUrl = $all_img_url;
 
         $description = MyFunc::parseCont($this->r, '<div class="description">', '<div class="product-reviews">');
-        // echo (gettype($description) . " " . $this->goodUrl) . PHP_EOL;
-        // die();
         $this->description = ParsFunc::megaTrim($description[0]);
+        $this->description = $this->formatDescriptionHtmlContent($this->description);
+
 
         if (strpos($this->r, '<p class="stock out-of-stock">')) {
             $this->prodStatus = 'not exist';
@@ -230,7 +230,23 @@ class ProductParserObject
 
 ##############  C O R R E C T O R S  #######################
 
+    public static function formatDescriptionHtmlContent($inputString): string
+    {
+        $inputString = str_replace(" ", " ", $inputString);
+        $inputString = str_replace("  </div>", "", $inputString);
+        $inputString = str_replace("<div><b><i>+380502210020</i></b></div>", "", $inputString);
+        $inputString = str_replace("<div><i>Киев, ул. Клеманская, 1/5</i></div>", "", $inputString);
+        $inputString = str_replace("<div><b><i>+380673890570 +380982990001</i></b></div>", "", $inputString);
+        $inputString = str_replace("<div><b><i>+380673890570 +380982990001</i></b></div>", "", $inputString);
+        $inputString = str_replace("<div><i>Киев, ул. Каземира Малевича, 86В м. Лыбедская (бывшая улица Боженко)</i></div>", "", $inputString);
+        $inputString = str_replace("<div><i>Закажите наши бесплатные образцы или ознакомьтесь лично с тканями в магазинах по адресу:</i></div>", "", $inputString);
+        $inputString = str_replace("<div><i>Закажите наши бесплатные образцы или ознакомьтесь лично с тканями в магазинах по адресу:</i></div>", "", $inputString);
 
+        if($inputString == "</div>") {
+            $inputString == "";
+        }
+        return $inputString;
+    }
 
     public static function explodeAndFormatFabricToneString($inputString): string
     {
