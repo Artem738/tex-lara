@@ -24,7 +24,7 @@ class ProductsSeeder extends Seeder
     {
         //MyFunc::hello();
         $allUrls = explode("\n", Storage::get($this->allUrlsFilePath));
-        $progressBar = new ProgressBar(new ConsoleOutput, count($allUrls)); // BAR
+        $progressBar = new ProgressBar(new ConsoleOutput, count($allUrls)-1); // BAR
         $progressBar->start(); // BAR
 
 

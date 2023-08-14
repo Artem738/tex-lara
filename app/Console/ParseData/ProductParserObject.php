@@ -4,6 +4,7 @@ namespace App\Console\ParseData;
 
 use App\MyFunctions\MyFunc;
 use App\MyFunctions\ParsFunc;
+use tidy;
 
 class ProductParserObject
 {
@@ -232,6 +233,7 @@ class ProductParserObject
 
     public static function formatDescriptionHtmlContent($inputString): string
     {
+        $inputString = trim($inputString);
         $inputString = str_replace(" ", " ", $inputString);
         $inputString = str_replace("  </div>", "", $inputString);
         $inputString = str_replace("<div><b><i>+380502210020</i></b></div>", "", $inputString);
@@ -240,11 +242,52 @@ class ProductParserObject
         $inputString = str_replace("<div><b><i>+380673890570 +380982990001</i></b></div>", "", $inputString);
         $inputString = str_replace("<div><i>Киев, ул. Каземира Малевича, 86В м. Лыбедская (бывшая улица Боженко)</i></div>", "", $inputString);
         $inputString = str_replace("<div><i>Закажите наши бесплатные образцы или ознакомьтесь лично с тканями в магазинах по адресу:</i></div>", "", $inputString);
-        $inputString = str_replace("<div><i>Закажите наши бесплатные образцы или ознакомьтесь лично с тканями в магазинах по адресу:</i></div>", "", $inputString);
+        $inputString = str_replace("<div><i>Закажите наши образцы или ознакомьтесь лично с тканями в магазинах по адресу:</i></div>", "", $inputString);
 
-        if($inputString == "</div>") {
-            $inputString == "";
+        $inputString = explode("<h2><strong>Купить ткань", $inputString)[0];
+        $inputString = explode("<p><b>Как выбрать ткань?</b></p>", $inputString)[0];
+        $inputString = explode("<div> <h2><strong>Купить", $inputString)[0];
+        $inputString = explode("<h2><strong>Купить", $inputString)[0];
+        $inputString = explode("<p>Купить ткань ", $inputString)[0];
+        $inputString = explode('<p><span style="font-weight: 400">Купить ткань ', $inputString)[0];
+        $inputString = explode('<h2 data-pm-slice="1 1 []', $inputString)[0];
+        $inputString = explode('<div data-pm-slice="1 1 []', $inputString)[0];
+        $inputString = explode('<p><strong>Варианты для пошива', $inputString)[0];
+
+        $inputString = str_replace('&nbsp;', " ", $inputString);
+        $inputString = str_replace(' data-pm-slice="1 1 []" data-en-clipboard="true"', "", $inputString);
+
+        //$this->description = htmlspecialchars($this->description);
+        $inputString = html_entity_decode($inputString, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+
+        if (mb_strlen($inputString) < 10) {
+            return "";
         }
+
+
+        $inputString = preg_replace('/<a\b[^>]*>(.*?)<\/a>/i', '', $inputString);
+
+        $tidy = new tidy();
+        $inputString = $tidy->repairString($inputString, array(
+            'show-body-only' => true, // Показывать только тело документа (удаляются head и все его содержимое)
+            'drop-proprietary-attributes' => true, // Удалять неподдерживаемые атрибуты
+            'clean' => true, // Очищать и форматировать HTML
+            'output-xhtml' => true, // Выводить XHTML
+            'wrap' => 0 // Не оборачивать в <html> и <body>
+        ));
+
+
+        $inputString = str_replace('<strong>', '', $inputString);
+        $inputString = str_replace('</strong>', '', $inputString);
+        $inputString = str_replace(' data-pm-slice="1 1 [" data-en-clipboard="true"', '', $inputString);
+
+        $inputString = explode('<p>* <em>Цена</em> указана при', $inputString)[0];
+        $inputString = explode('<p><em>* Цена указана', $inputString)[0];
+        $inputString = explode('<h2>Как купить ', $inputString)[0];
+        $inputString = explode('<h2>Как заказать ', $inputString)[0];
+
+
         return $inputString;
     }
 
@@ -280,6 +323,7 @@ class ProductParserObject
         return $inputString;
 
     }
+
     public static function explodeAndFormatFabricStructureString($inputString): string
     {
         $items = explode(';', $inputString);
