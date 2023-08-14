@@ -244,6 +244,7 @@ class ProductParserObject
         $inputString = str_replace("<div><i>Закажите наши бесплатные образцы или ознакомьтесь лично с тканями в магазинах по адресу:</i></div>", "", $inputString);
         $inputString = str_replace("<div><i>Закажите наши образцы или ознакомьтесь лично с тканями в магазинах по адресу:</i></div>", "", $inputString);
 
+
         $inputString = explode("<h2><strong>Купить ткань", $inputString)[0];
         $inputString = explode("<p><b>Как выбрать ткань?</b></p>", $inputString)[0];
         $inputString = explode("<div> <h2><strong>Купить", $inputString)[0];
@@ -253,9 +254,18 @@ class ProductParserObject
         $inputString = explode('<h2 data-pm-slice="1 1 []', $inputString)[0];
         $inputString = explode('<div data-pm-slice="1 1 []', $inputString)[0];
         $inputString = explode('<p><strong>Варианты для пошива', $inputString)[0];
+        $inputString = explode("<p>Закажите наши ", $inputString)[0];
+        $inputString = explode("<p><strong>Если вас заинтересовала ткань ", $inputString)[0];
+
 
         $inputString = str_replace('&nbsp;', " ", $inputString);
         $inputString = str_replace(' data-pm-slice="1 1 []" data-en-clipboard="true"', "", $inputString);
+
+        $inputString = str_replace('<strong>', '', $inputString);
+        $inputString = str_replace('</strong>', '', $inputString);
+        $inputString = str_replace('<strong style="font-weight: normal">', '', $inputString);
+
+
 
         //$this->description = htmlspecialchars($this->description);
         $inputString = html_entity_decode($inputString, ENT_QUOTES | ENT_HTML5, 'UTF-8');
@@ -278,8 +288,8 @@ class ProductParserObject
         ));
 
 
-        $inputString = str_replace('<strong>', '', $inputString);
-        $inputString = str_replace('</strong>', '', $inputString);
+
+
         $inputString = str_replace(' data-pm-slice="1 1 [" data-en-clipboard="true"', '', $inputString);
 
         $inputString = explode('<p>* <em>Цена</em> указана при', $inputString)[0];
@@ -287,6 +297,14 @@ class ProductParserObject
         $inputString = explode('<h2>Как купить ', $inputString)[0];
         $inputString = explode('<h2>Как заказать ', $inputString)[0];
 
+        $tidy = new tidy();
+        $inputString = $tidy->repairString($inputString, array(
+            'show-body-only' => true, // Показывать только тело документа (удаляются head и все его содержимое)
+            'drop-proprietary-attributes' => true, // Удалять неподдерживаемые атрибуты
+            'clean' => true, // Очищать и форматировать HTML
+            'output-xhtml' => true, // Выводить XHTML
+            'wrap' => 0 // Не оборачивать в <html> и <body>
+        ));
 
         return $inputString;
     }

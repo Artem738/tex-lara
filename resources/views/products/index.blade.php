@@ -12,7 +12,7 @@
     <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         @foreach ($products as $product)
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <img src="{{ $product->img_url }}" alt="{{ $product->name }}" class="w-full h-70 object-cover">
+                <img src="{{ $product->img_url }}" alt="{{ $product->name }}" class="w-full h-65 object-cover">
                 <div class="p-4">
                     <h2 class="text-xl font-semibold">{{ $product->name }}</h2>
                     <p class="text-gray-500">{{ $product->sku }}</p>
@@ -32,6 +32,7 @@
                             @endforeach
 
                     </div>
+                    <p class="text-gray-500">{!!  $product->description !!}</p>
                 </div>
             </div>
         @endforeach
