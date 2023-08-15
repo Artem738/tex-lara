@@ -157,10 +157,12 @@ class ProductParserObject
 
         $this->fabricTone = MyFunc::parseContMulti($this->r, '<span>' . $ottenok_lang, '</span>');
         $this->fabricTone = ParsFunc::parseTaggedString($this->fabricTone);
-        $this->fabricTone = $this->explodeAndFormatFabricToneString($this->fabricTone);
+        // $this->fabricTone = $this->explodeAndFormatFabricToneString($this->fabricTone);
 
         $this->patternType = MyFunc::parseContMulti($this->r, 'class="tagged_as">', '</span>');
         $this->patternType = ParsFunc::parseTaggedString($this->patternType);
+
+        $this->correctToneAndPatternData();
 
         $this->fabricStructure = MyFunc::parseContMulti($this->r, '<div class="product-fabric">', '</div>');
         $this->fabricStructure = MyFunc::parseContMulti($this->fabricStructure, $sostav . '</p><p>', '</p>');
@@ -231,6 +233,174 @@ class ProductParserObject
 
 ##############  C O R R E C T O R S  #######################
 
+
+    public function correctToneAndPatternData(): void
+    {
+        $tone = trim($this->fabricTone);
+        $pattern = trim($this->patternType);
+
+        //$tone = mb_strtoupper($tone, 'UTF-8');
+
+        $tone = str_replace(" - ", "-", $tone);
+        $tone = str_replace("/", "-", $tone);
+        $tone = str_replace("- ", "-", $tone);
+        $tone = str_replace(" -", "-", $tone);
+        $tone = str_replace("Бежевый/ принт леопард", "Бежевый", $tone);
+        $tone = str_replace('Бежевый/ змеиная кожа', "Бежевый", $tone);
+        $tone = str_replace("Многоцветный/ принт", "Многоцветный", $tone);
+        $tone = str_replace(" принт", "", $tone);
+        // $tone = str_replace("какао", "Какао", $tone);
+        // $tone = str_replace("темно-бежевый", "Темно-бежевый", $tone);
+        $tone = str_replace(" нюд", "", $tone);
+        $tone = str_replace("Светло серый", "Светло-серый", $tone);
+        $tone = str_replace("Электро синий", "Электро-синий", $tone);
+        $tone = str_replace(" меланж", "", $tone);
+        $tone = str_replace("Речной перламутр", "Жемчужный", $tone);
+        $tone = str_replace("Морская ракушка", "Розовый", $tone);
+        $tone = str_replace("Дымчатая роза", "Розовый", $tone);
+
+
+        $tone = str_replace("Золото", "Золотой", $tone);
+        $tone = str_replace("Светло голубой", "Светло-голубой", $tone);
+        $tone = str_replace("Многоцветный", "Многоцветный", $tone);
+        $tone = str_replace("Черно-розовая полоска", "Черный;Розовый", $tone);
+        $tone = str_replace("Черно-белая полоска", "Черный;Белый", $tone);
+        $tone = str_replace("Принт коричневый леопард", "Коричневый", $tone);
+        $tone = str_replace("Принт/ разноцветная полоска", "Разноцветный", $tone);
+        $tone = str_replace("Черно-красная полоска", "Черный;Красный", $tone);
+        $tone = str_replace("Голубой/ полоска", "Голубой", $tone);
+        $tone = str_replace("Принт этно", "Разноцветный", $tone);
+        $tone = str_replace(" кадетский", "", $tone);
+        $tone = str_replace(" орнамент", "", $tone);
+        $tone = str_replace(" градиент", "", $tone);
+        $tone = str_replace("Полоса персик/белый", "Белый;Персиковый", $tone);
+        $tone = str_replace("Полоска сераябелая", "Серо-белый", $tone);
+        $tone = str_replace("Синий/принт черный", "Синий;Черный", $tone);
+        $tone = str_replace("Полоска зелень/белый", "Зеленый;Белый", $tone);
+        $tone = str_replace("Полоса голубой/белый", "Голубой;Белый", $tone);
+        $tone = str_replace("Белая сетка,-завитушки цветочные", "Черный;Белый", $tone);
+        $tone = str_replace("Черно-белая полоска", "Черный;Белый", $tone);
+        $tone = str_replace("Принт бело-голубые треугольники", "Белый;Голубой", $tone);
+        $tone = str_replace("Полоса бежевый/темно-синий", "Бежевый;Темно-синий", $tone);
+        $tone = str_replace("Принт зеленый леопард", "Зеленый", $tone);
+        $tone = str_replace("Белый /принт серый", "Белый;Серый", $tone);
+        $tone = str_replace("Апероль", "Апероль;Оранжевый", $tone);
+        $tone = str_replace("Сетка черная-диско", "Черный", $tone);
+        $tone = str_replace("Сетка черная-бабочки", "Черный", $tone);
+        $tone = str_replace("Креш изумруд", "Зеленый;Изумруд", $tone);
+        $tone = str_replace("Многоцветный / полоска", "Многоцветный", $tone);
+
+
+        if ($pattern == "") {
+            $pattern = "Однотонный";
+        }
+        $pattern = mb_convert_case($pattern, MB_CASE_TITLE, 'UTF-8');
+
+        if ($tone == "") {
+            $tone = "Бесцветный";
+        }
+        $tone = mb_strtoupper(mb_substr($tone, 0, 1)) . mb_substr($tone, 1);
+
+        if ($tone == "Черно/белый зигзаг") {
+            $tone = "Черно-белый";
+            $pattern .= ";Зигзаг";
+        }
+
+        if ($tone == "Бело-голубой градиент") {
+            $tone = "Бело-голубой";
+            if ($pattern == "Однотонный") {
+                $pattern = "Зигзаг";
+            } else {
+                $pattern .= ";Зигзаг";
+            }
+        }
+
+        if ($tone == "Желто/белый зигзаг") {
+            $tone = "Желто-белый";
+            if ($pattern == "Однотонный") {
+                $pattern = "Зигзаг";
+            } else {
+                $pattern .= ";Зигзаг";
+            }
+        }
+
+        if ($tone == "Принт / разноцветный зигзаг") {
+            $tone = "Разноцветный";
+            if ($pattern == "Однотонный") {
+                $pattern = "Зигзаг";
+            } else {
+                $pattern .= ";Зигзаг";
+            }
+        }
+
+        if ($tone == "Желто-белая клетка") {
+            $tone = "Желто-белый";
+            if ($pattern == "Однотонный") {
+                $pattern = "Клетка";
+            } else {
+                $pattern .= ";Клетка";
+            }
+        }
+
+        if ($tone == "Серый с мелкой гусиной лапкой") {
+            $tone = "Серый";
+            if ($pattern == "Однотонный") {
+                $pattern = "Гусиная Лапка";
+            } else {
+                $pattern .= ";Гусиная Лапка";
+            }
+        }
+
+        if ($tone == "Зеленые круги") {
+            $tone = "Зеленый";
+            if ($pattern == "Однотонный") {
+                $pattern = "Круги";
+            } else {
+                $pattern .= ";Круги";
+            }
+        }
+
+        if ($tone == "Коричневые круги") {
+            $tone = "Коричневый";
+            if ($pattern == "Однотонный") {
+                $pattern = "Круги";
+            } else {
+                $pattern .= ";Круги";
+            }
+        }
+        if ($tone == "Белый/ ракушка") {
+            $tone = "Белый";
+            if ($pattern == "Однотонный") {
+                $pattern = "Ракушка";
+            } else {
+                $pattern .= ";Ракушка";
+            }
+        }
+
+        if ($tone == "Камуфляж") {
+            $tone = "Зеленый";
+            if ($pattern == "Однотонный") {
+                $pattern = "Камуфляж";
+            } else {
+                $pattern .= ";Камуфляж";
+            }
+        }
+
+
+        if ($this->sku == "F139") {
+            print PHP_EOL . ($this->sku . '<||>' . $tone . '<||>' . $pattern) . PHP_EOL;
+            die();
+        }
+
+
+        // $tone = mb_convert_case($tone, MB_CASE_TITLE, 'UTF-8');
+
+        $this->fabricTone = $tone;
+        $this->patternType = $pattern;
+
+    }
+
+
     public static function formatDescriptionHtmlContent($inputString): string
     {
         $inputString = trim($inputString);
@@ -266,7 +436,6 @@ class ProductParserObject
         $inputString = str_replace('<strong style="font-weight: normal">', '', $inputString);
 
 
-
         //$this->description = htmlspecialchars($this->description);
         $inputString = html_entity_decode($inputString, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
@@ -279,15 +448,15 @@ class ProductParserObject
         $inputString = preg_replace('/<a\b[^>]*>(.*?)<\/a>/i', '', $inputString);
 
         $tidy = new tidy();
-        $inputString = $tidy->repairString($inputString, array(
-            'show-body-only' => true, // Показывать только тело документа (удаляются head и все его содержимое)
-            'drop-proprietary-attributes' => true, // Удалять неподдерживаемые атрибуты
-            'clean' => true, // Очищать и форматировать HTML
-            'output-xhtml' => true, // Выводить XHTML
-            'wrap' => 0 // Не оборачивать в <html> и <body>
-        ));
-
-
+        $inputString = $tidy->repairString(
+            $inputString, array(
+                            'show-body-only' => true, // Показывать только тело документа (удаляются head и все его содержимое)
+                            'drop-proprietary-attributes' => true, // Удалять неподдерживаемые атрибуты
+                            'clean' => true, // Очищать и форматировать HTML
+                            'output-xhtml' => true, // Выводить XHTML
+                            'wrap' => 0 // Не оборачивать в <html> и <body>
+                        )
+        );
 
 
         $inputString = str_replace(' data-pm-slice="1 1 [" data-en-clipboard="true"', '', $inputString);
@@ -298,16 +467,19 @@ class ProductParserObject
         $inputString = explode('<h2>Как заказать ', $inputString)[0];
 
         $tidy = new tidy();
-        $inputString = $tidy->repairString($inputString, array(
-            'show-body-only' => true, // Показывать только тело документа (удаляются head и все его содержимое)
-            'drop-proprietary-attributes' => true, // Удалять неподдерживаемые атрибуты
-            'clean' => true, // Очищать и форматировать HTML
-            'output-xhtml' => true, // Выводить XHTML
-            'wrap' => 0 // Не оборачивать в <html> и <body>
-        ));
+        $inputString = $tidy->repairString(
+            $inputString, array(
+                            'show-body-only' => true, // Показывать только тело документа (удаляются head и все его содержимое)
+                            'drop-proprietary-attributes' => true, // Удалять неподдерживаемые атрибуты
+                            'clean' => true, // Очищать и форматировать HTML
+                            'output-xhtml' => true, // Выводить XHTML
+                            'wrap' => 0 // Не оборачивать в <html> и <body>
+                        )
+        );
 
         return $inputString;
     }
+
 
     public static function explodeAndFormatFabricToneString($inputString): string
     {

@@ -34,7 +34,8 @@ class ParsTestCommand extends Command
         $allMadeIns = [];
         $allCategoryAll = [];
         $allPurpose = [];
-        $allFabricTone = [];
+        $allFabricTones = [];
+        $allPatterns = [];
 
         for ($i = 0; $i < count($allUrls) - 1; $i++) {  //463
 
@@ -53,6 +54,7 @@ class ParsTestCommand extends Command
             $allCategoryAll[] = $prod->categoryAll;
             $allPurpose[] = $prod->purpose;
             $allFabricTones[] = $prod->fabricTone;
+            $allPatterns[] = $prod->patternType;
 
 
             /// CHEKING NON NULL DATA
@@ -78,10 +80,10 @@ class ParsTestCommand extends Command
                 // $this->alert(" -  fabricTone  - " . $prod->goodUrl);
                 //die();
             }
-            if ($prod->description == null) {
-                $this->error(" -  description  - " . $prod->goodUrl);
-                die();
-            }
+//            if ($prod->description == null) {
+//                $this->error(" -  description  - " . $prod->goodUrl);
+//                die();
+//            }
             if ($prod->price == null) {
                 $this->error(" -  price $$  - " . $prod->goodUrl);
                 //echo($prod);
@@ -127,8 +129,21 @@ class ParsTestCommand extends Command
 
         print_r($fabricToneStats);
 
+        $patternStats = $this->countSemicolonArrayStats($allPatterns);
+
+        print_r($patternStats);
+
+
+
+
+
     }
 
+    ######  F U N C T I O N S ###########
+    ######  F U N C T I O N S ###########
+    ######  F U N C T I O N S ###########
+    ######  F U N C T I O N S ###########
+    ######  F U N C T I O N S ###########
     ######  F U N C T I O N S ###########
 
     public static function showAssociativeArrayForArray(array $data): void
