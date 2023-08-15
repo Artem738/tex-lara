@@ -19,8 +19,6 @@ class MyFunc
         echo " \___  / |____/|___|  /\____|__  /__|   |__|    \______  /\____/\____ |\___  > " . PHP_EOL;
         echo "     \/             \/         \/                      \/            \/    \/  " . PHP_EOL;
 
-
-        //echo(MyFunc::bigTextNumber(11100110101));
         echo "              #####################################" . PHP_EOL;
         echo "              #        " . Carbon::now() . "        #" .PHP_EOL;
         echo "              #####################################" . PHP_EOL;
@@ -67,7 +65,6 @@ class MyFunc
         $urls = [];
         $r2 = explode($leftString, $r);
         for ($i = 1; $i < sizeof($r2); $i++) {
-            //$r2[$i] = $leftString.$r2[$i]; // хз
             $strpos = strpos($r2[$i], $rightString);
             $result = substr($r2[$i], 0, $strpos);
             if ($result) {
@@ -100,51 +97,11 @@ class MyFunc
             $value = str_replace("\t", " ", $value);
             $lineString = $lineString . $value . "\t";
         }
-        //print($lineString); exit;
         file_put_contents($resultDataTsvFilePath, $lineString . PHP_EOL, FILE_APPEND | LOCK_EX);
-        //print_r($dataMap);
+
     }
 
-    public static function bigTextNumber($number)
-    {
-        $digits = [
-            '0' => [
-                '  ***  ',
-                ' *   * ',
-                '*     *',
-                '*     *',
-                '*     *',
-                ' *   * ',
-                '  ***  ',
-            ],
-            '1' => [
-                '   *   ',
-                '  **   ',
-                '   *   ',
-                '   *   ',
-                '   *   ',
-                '   *   ',
-                ' ***** ',
-            ],
-            // Добавьте остальные цифры аналогичным образом
-            // '2' => [...],
-            // '3' => [...],
-            // и так далее...
-        ];
 
-        $result = [];
-        $numberArray = str_split(strval($number)); // Преобразование строки в массив цифр
-
-        for ($i = 0; $i < 7; $i++) {
-            $line = '';
-            foreach ($numberArray as $digit) {
-                $line .= $digits[$digit][$i] . '  ';
-            }
-            $result[] = $line;
-        }
-
-        return implode("\n", $result);
-    }
 
 
 }

@@ -39,7 +39,7 @@ class ParsTestCommand extends Command
 
         for ($i = 0; $i < count($allUrls) - 1; $i++) {  //463
 
-            echo ( $i.' '.$allUrls[$i] . " parsing start - ");
+            echo($i . ' ' . $allUrls[$i] . " parsing start - ");
             $fileHtmlString = Storage::get($this->productPagesPath . MyFunc::urlToFileName($allUrls[$i]));
             $prod = new ProductParserObject($fileHtmlString, $allUrls[$i]);
 
@@ -134,9 +134,6 @@ class ParsTestCommand extends Command
         print_r($patternStats);
 
 
-
-
-
     }
 
     ######  F U N C T I O N S ###########
@@ -152,9 +149,9 @@ class ParsTestCommand extends Command
         $stringData = "";
         $index = 1;
 
-        print PHP_EOL.PHP_EOL.PHP_EOL;
+        print PHP_EOL . PHP_EOL . PHP_EOL;
         foreach ($data as $name => $stat) {
-            $stringData .= "['id' => ".$index . ", 'name' => '" . $name."']," . PHP_EOL;
+            $stringData .= "['id' => " . $index . ", 'name' => '" . $name . "']," . PHP_EOL;
             $index++;
         }
 
@@ -171,7 +168,7 @@ class ParsTestCommand extends Command
 
         foreach ($exData as $item) {
             print($item) . PHP_EOL;
-            if (stripos ($item, ';100%')) {
+            if (stripos($item, ';100%')) {
                 return false;
             }
         }
@@ -198,6 +195,7 @@ class ParsTestCommand extends Command
         }
         return $totalPercentage === 100.0; // Сравниваем с double
     }
+
     public function getUniqueFabricsNames($dataArray)
     {
         $uniqueArray = array();
@@ -207,7 +205,7 @@ class ParsTestCommand extends Command
             foreach ($fabricsArray as $data) {
                 $exName = explode(" ", $data);
                 $exName = $exName[0];
-               // echo ($exName).PHP_EOL;
+                // echo ($exName).PHP_EOL;
                 if (isset($uniqueArray[$exName])) {
 //                    if ($exName == "100%") {
 //                        die($line);
@@ -238,7 +236,7 @@ class ParsTestCommand extends Command
         // ksort($statCatAll);
         uasort(
             $statArray, function ($b, $a) {
-            return $a - $b; // Сортировка по значению в порядке возрастания
+            return $a - $b;
         }
         );
         return $statArray;

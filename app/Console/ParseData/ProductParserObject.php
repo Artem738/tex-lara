@@ -242,11 +242,9 @@ class ProductParserObject
         //$tone = mb_strtoupper($tone, 'UTF-8');
 
         $tone = str_replace(" - ", "-", $tone);
-        $tone = str_replace("/", "-", $tone);
+        //$tone = str_replace("/", "-", $tone);
         $tone = str_replace("- ", "-", $tone);
         $tone = str_replace(" -", "-", $tone);
-        $tone = str_replace("Бежевый/ принт леопард", "Бежевый", $tone);
-        $tone = str_replace('Бежевый/ змеиная кожа', "Бежевый", $tone);
         $tone = str_replace("Многоцветный/ принт", "Многоцветный", $tone);
         $tone = str_replace(" принт", "", $tone);
         // $tone = str_replace("какао", "Какао", $tone);
@@ -289,6 +287,8 @@ class ProductParserObject
         $tone = str_replace("Сетка черная-бабочки", "Черный", $tone);
         $tone = str_replace("Креш изумруд", "Зеленый;Изумруд", $tone);
         $tone = str_replace("Многоцветный / полоска", "Многоцветный", $tone);
+
+
 
 
         if ($pattern == "") {
@@ -387,10 +387,57 @@ class ProductParserObject
         }
 
 
-        if ($this->sku == "F139") {
-            print PHP_EOL . ($this->sku . '<||>' . $tone . '<||>' . $pattern) . PHP_EOL;
-            die();
+        if ($tone == "Желто-белый зигзаг") {
+            $tone =  "Желто-белый";
+            $pattern = ($pattern == "Однотонный") ? "Зигзаг" : ($pattern . ";Зигзаг");
         }
+        if ($tone == "Узор разноцветный зиг-заг") {
+            $tone =  "Разноцветный";
+            $pattern = ($pattern == "Однотонный") ? "Зигзаг" : ($pattern . ";Зигзаг");
+        }
+        if ($tone == "Черно-белая клетка") {
+            $tone =  "Черно-белый";
+            $pattern = ($pattern == "Однотонный") ? "Клетка" : ($pattern . ";Клетка");
+        }
+        if ($tone == "Голограмма") {
+            $tone =  "Разноцветный";
+            $pattern = ($pattern == "Однотонный") ? "Голограмма" : ($pattern . ";Голограмма");
+        }
+        if ($tone == "Серые звездочки") {
+            $tone =  "Серый";
+            $pattern = ($pattern == "Однотонный") ? "Звёзды" : ($pattern . ";Звёзды");
+        }
+
+
+        $tone = str_replace("-принт змеиная кожа", "", $tone);
+        $tone = str_replace("-принт леопард", "", $tone);
+        $tone = str_replace("-принт", "", $tone);
+        $tone = str_replace("Коричневые цветы", "Коричневый", $tone);
+        $tone = str_replace(" зигзаг", ";Хаки", $tone);
+
+        $tone = str_replace("/ принт леопард", "", $tone);
+        $tone = str_replace('/ змеиная кожа', "", $tone);
+        $tone = str_replace('/ леопард', "", $tone);
+        $tone = str_replace('/ бензин', "", $tone);
+
+        $tone = str_replace('Черно-синяя полоска', "Черно-синий", $tone);
+        $tone = str_replace('Сетка черная-кошки', "Черный", $tone);
+        $tone = str_replace('Сетка белая', "Белый", $tone);
+        $tone = str_replace('Кофейный, структура елочка', "Кофейный", $tone);
+        $tone = str_replace('Черно-белая гусиная лапка', "Черно-белый", $tone);
+        $tone = str_replace('Розово-серая крупная клетка', "Розово-серый", $tone);
+        $tone = str_replace('Серебристая лиса', "Серебро;Розовый;Бежевый", $tone);
+        $tone = str_replace('Грязный бордо', "Бордо;Коричневый", $tone);
+        $tone = str_replace('Чёрно-белый', "Черно-белый", $tone);
+
+
+        $tone = str_replace(" хаки", ";Хаки", $tone);
+
+
+//        if ($this->sku == "F139") {
+//            print PHP_EOL . ($this->sku . '<||>' . $tone . '<||>' . $pattern) . PHP_EOL;
+//            //die();
+//        }
 
 
         // $tone = mb_convert_case($tone, MB_CASE_TITLE, 'UTF-8');
