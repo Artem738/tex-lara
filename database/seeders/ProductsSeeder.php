@@ -6,6 +6,7 @@ use App\Console\ParseData\ProductParserObject;
 use App\Models\Category;
 use App\Models\Fabric;
 use App\Models\Purpose;
+use App\Models\Tone;
 use App\MyFunctions\MyFunc;
 use Exception;
 use Illuminate\Database\Seeder;
@@ -24,7 +25,7 @@ class ProductsSeeder extends Seeder
     {
         //MyFunc::hello();
         $allUrls = explode("\n", Storage::get($this->allUrlsFilePath));
-        $progressBar = new ProgressBar(new ConsoleOutput, count($allUrls)-1); // BAR
+        $progressBar = new ProgressBar(new ConsoleOutput, count($allUrls) - 1); // BAR
         $progressBar->start(); // BAR
 
 
@@ -55,8 +56,8 @@ class ProductsSeeder extends Seeder
                         'roll_width_category' => $prod->rollWidthCategory,
                         'density' => $prod->density,
                         'country_id' => $country->id,
-                        'fabric_tone' => $prod->fabricTone,
-                        'pattern_type' => $prod->patternType,
+//                        'fabric_tone' => $prod->fabricTone,
+//                        'pattern_type' => $prod->patternType,
                         'price' => $prod->price,
                         'regular_price' => $prod->regularPrice,
                         'sale_price' => $prod->salePrice,
@@ -86,6 +87,12 @@ class ProductsSeeder extends Seeder
                 // purposes
                 $fabricsToAdd = explode(';', $prod->fabricStructure);
                 $this->attachManyToMany((new Fabric)->getTable(), 'fabric_product', 'fabric_id', $fabricsToAdd, $insertedProductId);
+
+                $tonesToAdd = explode(';', $prod->fabricTone);
+                $this->attachManyToMany('tones', 'tone_product', 'tone_id', $tonesToAdd, $insertedProductId);
+
+                $patternsToAdd = explode(';', $prod->patternType);
+                $this->attachManyToMany('patterns', 'pattern_product', 'pattern_id', $patternsToAdd, $insertedProductId);
 
             } catch (Exception $e) {
                 var_dump($e->getMessage()); // Вывести сообщение об ошибке и остановить выполнение скрипта

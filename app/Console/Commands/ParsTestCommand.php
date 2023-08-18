@@ -133,17 +133,16 @@ class ParsTestCommand extends Command
 
         print_r($patternStats);
 
-
+        $this->showAssociativeArrayForArray($fabricToneStats);
+        $this->showAssociativeArrayForArray($patternStats);
     }
 
-    ######  F U N C T I O N S ###########
-    ######  F U N C T I O N S ###########
-    ######  F U N C T I O N S ###########
+
     ######  F U N C T I O N S ###########
     ######  F U N C T I O N S ###########
     ######  F U N C T I O N S ###########
 
-    public static function showAssociativeArrayForArray(array $data): void
+    public static function showAssociativeArrayForArray(array $data): void  //countSemicolonArrayStats needed
     {
         ksort($data);
         $stringData = "";

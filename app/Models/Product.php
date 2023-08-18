@@ -86,5 +86,13 @@ class Product extends Model
     {
         return $this->belongsToMany(Fabric::class, 'fabric_product');
     }
+    public function tones()
+    {
+        return $this->belongsToMany(Tone::class, 'tone_product');
+    }
+    public function patterns()
+    {
+        return $this->belongsToMany(Pattern::class, 'pattern_product');
+    }
 
 }

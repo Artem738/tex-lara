@@ -32,7 +32,21 @@
                             @endforeach
 
                     </div>
-                    <p class="text-gray-500">{!!  $product->description !!}</p>
+                    <div class="mt-2">
+
+                        @foreach ($product->tones as $tone)
+                            <li>{{ $tone->name }}</li>
+                        @endforeach
+
+                    </div>
+                    <div class="mt-2">
+
+                        @foreach ($product->patterns as $patterns)
+                            <li>{{ $patterns->name }}</li>
+                        @endforeach
+
+                    </div>
+{{--                    <p class="text-gray-500">{!!  $product->description !!}</p>--}}
                 </div>
             </div>
         @endforeach

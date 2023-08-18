@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
                 CategoriesSeeder::class,
                 PurposeSeeder::class,
                 FabricsSeeder::class,
+                TonesSeeder::class,
+                PatternsSeeder::class,
                 ProductsSeeder::class,
 
             ]
