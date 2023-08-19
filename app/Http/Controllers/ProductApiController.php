@@ -5,12 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\DTO\ProductIndexDto;
 use App\Http\Requests\ProductApi\ProductIndexRequest;
 use App\Http\Resources\ProductResource;
+use App\Http\Services\ProductApiService;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductApiController extends Controller
 {
-    protected APIProductService $service;
+    public function __construct(
+        protected ProductApiService $service
+    ) {
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -26,22 +31,18 @@ class ProductApiController extends Controller
             $valid['country_id'] ?? null,
             $valid['purpose'] ?? null,
             $valid['lastId'] ?? null,
+            $valid['prod_status'] ?? null,
         );
-        var_dump($dto);
-        die();
+
+        $products = $this->service->getIndexProducts($dto);
+
+        //$resource = BookResource::collection($books);
+
+      //  var_dump($products);
+      //  die();
 
 
-//        $dto = new BookIndexDTO(
-//            new Carbon($validatedData['startDate']),
-//            new Carbon($validatedData['endDate']),
-//            $validatedData['year'] ?? null,
-//            LangEnum::tryFrom($validatedData['lang'] ?? null),// Довго розбирався, запрацювало...
-//            $validatedData['lastId'] ?? 0,
-//            LimitEnum::tryFrom($validatedData['limit'] ?? LimitEnum::LIMIT_20->value),
-//        );
 
-
-        $products = Product::all();
 
 
         return response()->json(

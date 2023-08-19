@@ -18,6 +18,7 @@ class ProductIndexRequest extends FormRequest
             'pattern'  => ['nullable', 'integer', 'exists:patterns,id'],
             'country_id'  => ['nullable', 'integer', 'exists:countries,id'],
             'purpose'  => ['nullable', 'integer', 'exists:purpose,id'],
+            'prod_status'  => ['nullable','string', 'exists:purpose,id'], //ENUM
             'lastId' => ['nullable', 'integer', 'exists:products,id'],
 //            minPrice
 //            maxPrice

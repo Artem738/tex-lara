@@ -41,31 +41,7 @@ class Product extends Model
 
     protected $table = "products";
 
-    protected $fillable = [
-        'r',
-        'sku',
-        'title',
-        'goodUrl',
-        'description',
-        'categoryAll',
-        'purpose',
-        'rollWidth',
-        'density',
-        'madeIn',
-        'fabricTone',
-        'patternType',
-        'fabricStructure',
-        'price',
-        'regularPrice',
-        'salePrice',
-        'imgUrl',
-        'allImgUrl',
-        'optDiscount',
-        'saleDiscount',
-        'cutDiscount',
-        'rollDiscount',
-        'prodStatus'
-    ];
+    protected $guarded = [];
 
     public function country()
     {
@@ -86,13 +62,40 @@ class Product extends Model
     {
         return $this->belongsToMany(Fabric::class, 'fabric_product');
     }
+
     public function tones()
     {
         return $this->belongsToMany(Tone::class, 'tone_product');
     }
+
     public function patterns()
     {
         return $this->belongsToMany(Pattern::class, 'pattern_product');
     }
-
 }
+
+
+//    protected $fillable = [
+//        'sku',
+//        'title',
+//        'goodUrl',
+//        'description',
+//        'categoryAll',
+//        'purpose',
+//        'rollWidth',
+//        'density',
+//        'madeIn',
+//        'fabricTone',
+//        'patternType',
+//        'fabricStructure',
+//        'price',
+//        'regularPrice',
+//        'salePrice',
+//        'imgUrl',
+//        'allImgUrl',
+//        'optDiscount',
+//        'saleDiscount',
+//        'cutDiscount',
+//        'rollDiscount',
+//        'prodStatus'
+//    ];

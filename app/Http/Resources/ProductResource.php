@@ -27,6 +27,7 @@ class ProductResource extends JsonResource
             'purpose' => $this->purposes->pluck('name'),
             'tone' => $this->tones->pluck('name'),
             'pattern' => $this->patterns->pluck('name'),
+            'prod_status' => $this->prod_status,
             // Добавьте другие поля, которые вы хотите включить в JSON
         ];
     }
