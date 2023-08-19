@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('pattern_product', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('pattern_id');
-            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('pattern_id')->unsigned();
+            $table->unsignedBigInteger('product_id')->unsigned();
             $table->timestamps();
 
             $table->foreign('pattern_id')->references('id')->on('patterns')->onDelete('cascade');

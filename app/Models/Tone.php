@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tone extends Model
 {
-    use HasFactory;
     protected $fillable = ['name'];
     public function products()
     {
