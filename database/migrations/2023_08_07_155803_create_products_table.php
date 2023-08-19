@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('roll_width_category')->nullable();
             $table->string('density')->nullable();
             $table->unsignedBigInteger('country_id')->nullable();
-            $table->string('fabric_tone')->nullable();
-            $table->string('pattern_type')->nullable();
+//            $table->string('fabric_tone')->nullable();
+//            $table->string('pattern_type')->nullable();
             $table->float('price')->nullable();
             $table->float('regular_price')->nullable();
             $table->float('sale_price')->nullable();

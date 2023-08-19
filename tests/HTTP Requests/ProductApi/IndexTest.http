@@ -1,0 +1,8 @@
+### GET request with environment variables
+GET http://tex-lara.loc/api/products/?category=1&fabric=10
+
+
+###
+#  &lang=ua
+#  GET http://lara-pro.loc/api/books/?startDate=1821-07-15&endDate=1847-07-16&year=2000
+#
