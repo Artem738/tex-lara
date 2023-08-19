@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Console\ParseData\ProductParserObject;
 use App\Models\Category;
 use App\Models\Fabric;
+use App\Models\Pattern;
 use App\Models\Purpose;
 use App\Models\Tone;
 use App\MyFunctions\MyFunc;
@@ -56,8 +57,8 @@ class ProductsSeeder extends Seeder
                         'roll_width_category' => $prod->rollWidthCategory,
                         'density' => $prod->density,
                         'country_id' => $country->id,
-//                        'fabric_tone' => $prod->fabricTone,
-//                        'pattern_type' => $prod->patternType,
+                        'fabric_tone' => $prod->fabricTone,
+                        'pattern_type' => $prod->patternType,
                         'price' => $prod->price,
                         'regular_price' => $prod->regularPrice,
                         'sale_price' => $prod->salePrice,
@@ -89,10 +90,11 @@ class ProductsSeeder extends Seeder
                 $this->attachManyToMany((new Fabric)->getTable(), 'fabric_product', 'fabric_id', $fabricsToAdd, $insertedProductId);
 
                 $tonesToAdd = explode(';', $prod->fabricTone);
-                $this->attachManyToMany('tones', 'tone_product', 'tone_id', $tonesToAdd, $insertedProductId);
+                $this->attachManyToMany((new Tone)->getTable(), 'tone_product', 'tone_id', $tonesToAdd, $insertedProductId);
 
                 $patternsToAdd = explode(';', $prod->patternType);
-                $this->attachManyToMany('patterns', 'pattern_product', 'pattern_id', $patternsToAdd, $insertedProductId);
+                //print(gettype($patternsToAdd)).PHP_EOL;
+                $this->attachManyToMany((new Pattern())->getTable(), 'pattern_product', 'pattern_id', $patternsToAdd, $insertedProductId);
 
             } catch (Exception $e) {
                 var_dump($e->getMessage()); // Вывести сообщение об ошибке и остановить выполнение скрипта

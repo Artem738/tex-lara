@@ -46,6 +46,8 @@ class APIProductController extends Controller
        // print($id); die();
         $product = Product::findOrFail($id);
 
+        //dd($product->categorie);
+
         //print($product->good_url).PHP_EOL;
         return response()->json(
             [

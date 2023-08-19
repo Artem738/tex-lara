@@ -10,12 +10,12 @@ class CreateFabricProductTable extends Migration
     {
         Schema::create('fabric_product', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('fabric_id');
-            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('fabric_id')->constrained();
+            $table->unsignedBigInteger('product_id')->constrained();
             $table->timestamps();
 
-            $table->foreign('fabric_id')->references('id')->on('fabrics')->onDelete('cascade');
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+//            $table->foreign('fabric_id')->references('id')->on('fabrics')->onDelete('cascade');
+//            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
     }
 

@@ -19,6 +19,7 @@ return new class extends Migration
 
             $table->foreign('pattern_id')->references('id')->on('patterns')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+
         });
     }
 

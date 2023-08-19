@@ -41,8 +41,8 @@
                     </div>
                     <div class="mt-2">
 
-                        @foreach ($product->patterns as $patterns)
-                            <li>{{ $patterns->name }}</li>
+                        @foreach ($product->patterns as $pattern)
+                            <li>{{ $pattern->name }}</li>
                         @endforeach
 
                     </div>
