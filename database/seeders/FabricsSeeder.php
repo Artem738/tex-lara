@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Console\ParseData\ProductParserObject;
 use App\Models\Category;
 use App\Models\Purpose;
-use App\MyFunctions\MyFunc;
+use App\Helpers\MyHelper;
 use Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;

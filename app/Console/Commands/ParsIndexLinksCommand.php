@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
-use App\MyFunctions\MyFunc;
+use App\Helpers\MyHelper;
 
 class ParsIndexLinksCommand extends Command
 {
@@ -62,7 +62,7 @@ class ParsIndexLinksCommand extends Command
 
 
             $fileData = Storage::get($filePath);
-            $urls = MyFunc::parseCont($fileData, '"mob-menu-li-a" href="', '</a>');
+            $urls = MyHelper::parseCont($fileData, '"mob-menu-li-a" href="', '</a>');
 
 
             $urlsDataArray = array();
@@ -71,7 +71,7 @@ class ParsIndexLinksCommand extends Command
                 $urlsDataArray[$targetUrl . $urlData[0]] = $urlData[1];
             }
 
-            $urls = MyFunc::parseCont($fileData, '<li class="menu-item menu-item-type-taxonomy', '</a>');
+            $urls = MyHelper::parseCont($fileData, '<li class="menu-item menu-item-type-taxonomy', '</a>');
             foreach ($urls as $url) {
                 $urlData = explode('<a href="', $url);
                 $urlData = explode('">', $urlData[1]);

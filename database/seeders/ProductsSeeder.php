@@ -8,7 +8,7 @@ use App\Models\Fabric;
 use App\Models\Pattern;
 use App\Models\Purpose;
 use App\Models\Tone;
-use App\MyFunctions\MyFunc;
+use App\Helpers\MyHelper;
 use Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +33,7 @@ class ProductsSeeder extends Seeder
         $currentProductId = 0;
         foreach ($allUrls as $url) {
             $currentProductId++;
-            $fileHtmlString = Storage::get($this->productPagesPath . MyFunc::urlToFileName($url));
+            $fileHtmlString = Storage::get($this->productPagesPath . MyHelper::urlToFileName($url));
             $prod = new ProductParserObject($fileHtmlString, $url);
             try {
 

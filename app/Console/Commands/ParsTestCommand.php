@@ -3,12 +3,12 @@
 namespace App\Console\Commands;
 
 use App\Console\ParseData\ProductParserObject;
-use App\MyFunctions\ParsFunc;
+use App\Helpers\StringHelper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
-use App\MyFunctions\MyFunc;
+use App\Helpers\MyHelper;
 use PHPUnit\Event\Runtime\PHP;
 
 class ParsTestCommand extends Command
@@ -27,7 +27,7 @@ class ParsTestCommand extends Command
      */
     public function handle()
     {
-        MyFunc::hello();
+        MyHelper::hello();
         $allUrls = explode("\n", Storage::get($this->allUrlsFilePath));
 
         //$this->output->progressStart(sizeof($allUrls));
@@ -40,7 +40,7 @@ class ParsTestCommand extends Command
         for ($i = 0; $i < count($allUrls) - 1; $i++) {  //463
 
             echo($i . ' ' . $allUrls[$i] . " parsing start - ");
-            $fileHtmlString = Storage::get($this->productPagesPath . MyFunc::urlToFileName($allUrls[$i]));
+            $fileHtmlString = Storage::get($this->productPagesPath . MyHelper::urlToFileName($allUrls[$i]));
             $prod = new ProductParserObject($fileHtmlString, $allUrls[$i]);
 
             if (!$prod->checkData()) {

@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\DTO\ProductIndexDto;
+use App\Http\Controllers\Traits\ApiResponseTrait;
 use App\Http\Requests\ProductApi\ProductIndexRequest;
 use App\Http\Resources\ProductResource;
 use App\Http\Services\ProductApiService;
+use App\Http\VO\ProductIndexVO;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductApiController extends Controller
 {
+    use ApiResponseTrait;
+
     public function __construct(
         protected ProductApiService $service
     ) {
@@ -19,44 +23,13 @@ class ProductApiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(ProductIndexRequest $request)
+    public function index(ProductIndexRequest $request): Response
     {
         $valid = $request->validated();
-
-        $dto = new ProductIndexDto(
-            $valid['category'] ?? null,
-            $valid['fabric'] ?? null,
-            $valid['tone'] ?? null,
-            $valid['pattern'] ?? null,
-            $valid['country_id'] ?? null,
-            $valid['purpose'] ?? null,
-            $valid['lastId'] ?? null,
-            $valid['prod_status'] ?? null,
-        );
-
-        $products = $this->service->getIndexProducts($dto);
-
+        $productIndexVO = ProductIndexVO::fromArray($valid);
+        $products = $this->service->getIndexProducts($productIndexVO);
         //$resource = BookResource::collection($books);
-
-      //  var_dump($products);
-      //  die();
-
-
-
-
-
-        return response()->json(
-            [
-                'data' => ProductResource::collection($products),
-                'Bearer' => '',
-                'meta' => [
-                    'info' => '',
-                ],
-            ],
-            200,
-            [],
-            JSON_UNESCAPED_UNICODE
-        );
+        return $this->createResponse(ProductResource::collection($products));
     }
 
     /**
@@ -72,24 +45,8 @@ class ProductApiController extends Controller
      */
     public function show($id)
     {
-        // print($id); die();
         $product = Product::findOrFail($id);
-
-        //dd($product->categorie);
-
-        //print($product->good_url).PHP_EOL;
-        return response()->json(
-            [
-                'data' => new ProductResource($product),
-                'Bearer' => '',
-                'meta' => [
-                    'info' => '',
-                ],
-            ],
-            200,
-            [],
-            JSON_UNESCAPED_UNICODE
-        );
+        return $this->createResponse(new ProductResource($product));
     }
 
     /**

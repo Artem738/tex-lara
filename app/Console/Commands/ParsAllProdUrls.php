@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use App\MyFunctions\MyFunc;
+use App\Helpers\MyHelper;
 
 
 class ParsAllProdUrls extends Command
@@ -47,7 +47,7 @@ class ParsAllProdUrls extends Command
             foreach ($files as $file) {
                 $fileName = pathinfo($file, PATHINFO_BASENAME);
                 $fileData = Storage::get($this->directoryPath . '/' . $fileName);
-                $urls = MyFunc::parseCont($fileData, '</h2>	<a href="', '"');
+                $urls = MyHelper::parseCont($fileData, '</h2>	<a href="', '"');
 
                 $allUrls = array_merge($allUrls, $urls);
             }
@@ -98,7 +98,7 @@ class ParsAllProdUrls extends Command
             $this->output->progressStart(sizeof($urls));
 
             foreach ($urls as $url) {
-                $filename = MyFunc::urlToFileName($url);
+                $filename = MyHelper::urlToFileName($url);
 
                 if (Storage::exists($this->productPagesPath . $filename)) {
                     //$this->info("Exist");

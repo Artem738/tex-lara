@@ -1,29 +1,42 @@
 <?php
 
-namespace App\Http\DTO;
+namespace App\Http\VO;
 
-class ProductIndexDto
+class ProductIndexVO
 {
     protected ?int $startId;
 
     public function __construct(
-
-        protected ?int $category,
-        protected ?int $fabric,
-        protected ?int $tone,
-        protected ?int $pattern,
-        protected ?int $country_id,
-        protected ?int $purpose,
-        protected ?int $lastId,
-        protected ?string $prod_status,
+        protected ?int    $category,
+        protected ?int    $fabric,
+        protected ?int    $tone,
+        protected ?int    $pattern,
+        protected ?int    $countryId,
+        protected ?int    $purpose,
+        protected ?int    $lastId,
+        protected ?string $prodStatus,
     ) {
         $this->startId = $this->lastId;
     }
 
+    public static function fromArray(array $data): static
+    {
+        return new static(
+            $data['category'] ?? null,
+            $data['fabric'] ?? null,
+            $data['tone'] ?? null,
+            $data['pattern'] ?? null,
+            $data['country_id'] ?? null,
+            $data['purpose'] ?? null,
+            $data['lastId'] ?? null,
+            $data['prod_status'] ?? null
+        );
+    }
+
     /**
-     * @return int
+     * @return int|null
      */
-    public function getStartId(): int
+    public function getStartId(): ?int
     {
         return $this->startId;
     }
@@ -65,7 +78,7 @@ class ProductIndexDto
      */
     public function getCountryId(): ?int
     {
-        return $this->country_id;
+        return $this->countryId;
     }
 
     /**
@@ -89,7 +102,7 @@ class ProductIndexDto
      */
     public function getProdStatus(): ?string
     {
-        return $this->prod_status;
+        return $this->prodStatus;
     }
 
 }
